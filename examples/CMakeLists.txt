@@ -9,6 +9,7 @@ include(GNUInstallDirs)
 
 # List of all buildable examples.
 set(EXAMPLES
+    base_derived_cast
     concept_checks
     optional_ref
     pythagorean_triples
