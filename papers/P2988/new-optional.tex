@@ -104,7 +104,7 @@ namespace std {
 }
 \end{codeblock}
 
-\rSec2[optional.optional]{Class template \tcode{optional} \added{for object types}}
+\rSec2[optional.optional]{Class template \tcode{optional}}
 
 \rSec3[optional.optional.general]{General}
 
@@ -1022,13 +1022,16 @@ namespace std {
 
       template <class Arg>
       constexpr_func explicit optional(in_place_t, Arg&& arg);
-
-      template <class U> constexpr explicit(@\seebelow@) optional(U&& u) noexcept(@\seebelow@);
-
-      template <class U> constexpr explicit(@\seebelow@) optional(optional<U>& rhs) noexcept(@\seebelow@)
-      template <class U> constexpr explicit(@\seebelow@) optional(const optional<U>& rhs) noexcept(@\seebelow@)
-      template <class U> constexpr explicit(@\seebelow@) optional(optional<U>&& rhs) noexcept(@\seebelow@)
-      template <class U> constexpr explicit(@\seebelow@) optional(const optional<U>&& rhs) noexcept(@\seebelow@)
+      template <class U>
+      constexpr explicit(@\seebelow@) optional(U&& u) noexcept(@\seebelow@);
+      template <class U>
+      constexpr explicit(@\seebelow@) optional(optional<U>& rhs) noexcept(@\seebelow@)
+      template <class U>
+      constexpr explicit(@\seebelow@) optional(const optional<U>& rhs) noexcept(@\seebelow@)
+      template <class U>
+      constexpr explicit(@\seebelow@) optional(optional<U>&& rhs) noexcept(@\seebelow@)
+      template <class U>
+      constexpr explicit(@\seebelow@) optional(const optional<U>&& rhs) noexcept(@\seebelow@)
 
       constexpr ~optional() = default;
 
@@ -1063,6 +1066,10 @@ namespace std {
 
     private:
     T* @\exposid{val}@; // \expos
+
+    // \ref{optionalref.expos}, exposition only helper functions
+    template <class U>
+    constexpr void @\exposid{convert-ref-init-val}@(U&& u) // \expos
   };
 
 }
@@ -1103,7 +1110,7 @@ constexpr explicit optional(in_place_t, Arg&& arg);
 
   \pnum
   \effects
-  Creates a variable \tcode{r} as if by \tcode{T\& r(std::forward<Arg>(arg));} and then initializes \exposid{val} with \tcode{addressof(r)}.
+  Equivalent to: \tcode{\exposid{convert-ref-init-val}(arg);}
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -1122,7 +1129,7 @@ template <class U>
 
   \pnum
   \effects
-  Creates a variable \tcode{r} as if by \tcode{T\& r(std::forward<U>(u));} and then initializes \exposid{val} with \tcode{addressof(r)}.
+  Equivalent to: \tcode{\exposid{convert-ref-init-val}(u);}
 
   \pnum
   \remarks
@@ -1135,13 +1142,9 @@ template <class U>
 is_nothrow_constructible_v<T&, U>
   \end{codeblock}
   This constructor is defined as deleted if
-  \begin{codeblock}
-reference_constructs_from_temporary_v<T&, U>
-  \end{codeblock}
+  \tcode{reference_constructs_from_temporary_v<T\&, U>}
   is \tcode{true}
 \end{itemdescr}
-
-
 
 \begin{itemdecl}
 template <class U>
@@ -1162,7 +1165,7 @@ constexpr explicit(@\seebelow@) optional(optional<U>& rhs) noexcept(@\seebelow@)
   Equivalent to:
   \begin{codeblock}
 if (rhs.has_value()) {
-    @\exposid{val}@ = addressof(static_cast<T&>(*rhs));
+    @\exposid{convert-ref-init-val}@(*rhs);
 } else {
     @\exposid{val}@ = nullptr;
 }
@@ -1179,9 +1182,7 @@ if (rhs.has_value()) {
 is_nothrow_constructible_v<T&, U&>
   \end{codeblock}
   This constructor is defined as deleted if
-  \begin{codeblock}
-reference_constructs_from_temporary_v<T&, U&>
-  \end{codeblock}
+  \tcode{reference_constructs_from_temporary_v<T\&, U\&>}
   is \tcode{true}.
 \end{itemdescr}
 
@@ -1205,7 +1206,7 @@ constexpr explicit(@\seebelow@) optional(const optional<U>& rhs) noexcept(@\seeb
   Equivalent to:
   \begin{codeblock}
 if (rhs.has_value()) {
-    @\exposid{val}@ = addressof(static_cast<T&>(*rhs));
+    @\exposid{convert-ref-init-val}@(*rhs);
 } else {
     @\exposid{val}@ = nullptr;
 }
@@ -1223,12 +1224,9 @@ if (rhs.has_value()) {
 is_nothrow_constructible_v<T&, const U&>
   \end{codeblock}
   This constructor is defined as deleted if
-  \begin{codeblock}
-reference_constructs_from_temporary_v<T&, const U&>
-  \end{codeblock}
+\tcode{reference_constructs_from_temporary_v<T\&, const U\&>}
   is \tcode{true}
 \end{itemdescr}
-
 
 \begin{itemdecl}
 template <class U>
@@ -1249,7 +1247,7 @@ constexpr explicit(@\seebelow@) optional(optional<U>&& rhs) noexcept(@\seebelow@
   Equivalent to:
   \begin{codeblock}
 if (rhs.has_value()) {
-    @\exposid{val}@ = addressof(static_cast<T&>(*std::move(rhs)));
+    @\exposid{convert-ref-init-val}@(*std::move(rhs));
 } else {
     @\exposid{val}@ = nullptr;
 }
@@ -1266,9 +1264,7 @@ if (rhs.has_value()) {
 is_nothrow_constructible_v<T&, U>
   \end{codeblock}
   This constructor is defined as deleted if
-  \begin{codeblock}
-reference_constructs_from_temporary_v<T&, U>
-  \end{codeblock}
+\tcode{reference_constructs_from_temporary_v<T\&, U>}
   is \tcode{true}
 \end{itemdescr}
 
@@ -1291,7 +1287,7 @@ constexpr explicit(@\seebelow@) optional(const optional<U>&& rhs) noexcept(@\see
   Equivalent to:
   \begin{codeblock}
 if (rhs.has_value()) {
-    @\exposid{val}@ = addressof(static_cast<T&>(std::move(*rhs)));
+  @\exposid{convert-ref-init-val}@(*std::move(rhs));
 } else {
     @\exposid{val}@ = nullptr;
 }
@@ -1308,9 +1304,7 @@ if (rhs.has_value()) {
 is_nothrow_constructible_v<T&, const U>
   \end{codeblock}
   This constructor is defined as deleted if
-  \begin{codeblock}
-reference_constructs_from_temporary_v<T&, const U>
-  \end{codeblock}
+\tcode{reference_constructs_from_temporary_v<T\&, const U>}
   is \tcode{true}.
 \end{itemdescr}
 
@@ -1350,7 +1344,7 @@ constexpr T& emplace(U&& u) noexcept(@\seebelow@);
 
   \pnum
   \effects
-  Assigns \tcode{addressof(static_cast<T\&>(std::forward<U>(u)))} to \tcode{\exposid{val}}.
+  Equivalent to: \tcode{\exposid{convert-ref-init-val}(u);}
 
   \pnum
   \remarks
@@ -1406,7 +1400,7 @@ constexpr iterator begin() const noexcept;
   \pnum
   \returns
   If \tcode{has_value()} is \tcode{true},
-  an iterator referring to the referred to value.
+  an iterator referring to the contained value.
   Otherwise, a past-the-end iterator value.
 
 \end{itemdescr}
@@ -1551,7 +1545,7 @@ constexpr auto transform(F&& f) const -> optional<invoke_result_t<F, T&>>;
 
   \pnum
   \mandates
-  \tcode{U} is a valid contained typename for optional.
+  \tcode{U} is a valid contained type for optional.
 
   \pnum
   \effects
@@ -1599,9 +1593,22 @@ constexpr void reset() noexcept;
   \effects
   Equivalent to:
   \begin{codeblock}
-  @\exposid{val}@ = nullptr;
+    @\exposid{val}@ = nullptr;
   \end{codeblock}
   \tcode{\exposid{val}} does not refer to a value.
+\end{itemdescr}
+
+\rSec3[optionalref.expos]{Exposition only helper functions}
+\begin{itemdecl}
+template <class U>
+constexpr void @\exposid{convert-ref-init-val}@(U&& u) // \expos
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \pnum
+  \effects
+  Creates a variable \tcode{r} as if by \tcode{T\& r(std::forward<U>(u));} and then initializes \exposid{val} with \tcode{addressof(r)}.
 \end{itemdescr}
 
 \end{addedblock}
