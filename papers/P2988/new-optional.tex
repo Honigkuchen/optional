@@ -1078,7 +1078,7 @@ namespace std {
 \pnum
 An object of \tcode{optional<T\&>} \defnx{contains a value}{contains a value!\idxcode{optional}} if and only if \tcode{\exposid{val} != nullptr} is \tcode{true}.
 
-\rSec3[optionalref.ctor]{Constructors}
+\rSec3[optional.ref.ctor]{Constructors}
 
 \begin{itemdecl}
 constexpr optional() noexcept;
@@ -1309,7 +1309,7 @@ is_nothrow_constructible_v<T&, const U>
 \end{itemdescr}
 
 
-\rSec3[optionalref.assign]{Assignment}
+\rSec3[optional.ref.assign]{Assignment}
 
 \begin{itemdecl}
 constexpr optional& operator=(nullopt_t) noexcept;
@@ -1355,7 +1355,7 @@ is_nothrow_constructible_v<T&, U>
 \end{itemdescr}
 
 
-\rSec3[optionalref.swap]{Swap}
+\rSec3[optional.ref.swap]{Swap}
 
 \begin{itemdecl}
 constexpr void swap(optional& rhs) noexcept;
@@ -1371,7 +1371,7 @@ std::swap(@\exposid{val}@, rhs.@\exposid{val}@);
 \end{itemdescr}
 
 
-\rSec3[optionalref.iterators]{Iterator support}
+\rSec3[optional.ref.iterators]{Iterator support}
 \begin{itemdecl}
 using iterator = @\impdef@;
 \end{itemdecl}
@@ -1417,7 +1417,7 @@ constexpr iterator end() const noexcept;
 
 
 
-\rSec3[optionalref.observe]{Observers}
+\rSec3[optional.ref.observe]{Observers}
 
 \begin{itemdecl}
 constexpr T* operator->() const noexcept;
@@ -1507,7 +1507,7 @@ if (has_value()) {
 \end{itemdescr}
 
 
-\rSec3[optionalref.monadic]{Monadic operations}
+\rSec3[optional.ref.monadic]{Monadic operations}
 
 \begin{itemdecl}
 template <class F>
@@ -1582,7 +1582,7 @@ constexpr optional or_else(F&& f) const;
 \end{itemdescr}
 
 
-\rSec3[optionalref.mod]{Modifiers}
+\rSec3[optional.ref.mod]{Modifiers}
 
 \begin{itemdecl}
 constexpr void reset() noexcept;
@@ -1598,7 +1598,7 @@ constexpr void reset() noexcept;
   \tcode{\exposid{val}} does not refer to a value.
 \end{itemdescr}
 
-\rSec3[optionalref.expos]{Exposition only helper functions}
+\rSec3[optional.ref.expos]{Exposition only helper functions}
 \begin{itemdecl}
 template <class U>
 constexpr void @\exposid{convert-ref-init-val}@(U&& u) // \expos
