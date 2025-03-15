@@ -342,7 +342,7 @@ void process(std::optional<std::string const&>);
 void process(std::optional<char const* const&>);
 
 void test() {
-  char const* cstr = Text;
+  char const* cstr = "Text";
   std::string s = cstr;
   process(s); // Picks, optional<std::string const&> overload
   process(cstr); // Ambiguous, but only std::optional<char const* const&> is not dangling
@@ -389,7 +389,7 @@ constructing temporary \tcode{optional<T\&>}, and then assigning it to it.
 This observation allows us to provide only copy-assignment for \tcode{optional<T\&>}, instead of a set of converting assignments, that would need to replicate the signatures of constructors and their constraints. Assignment from any other value is handled by first implicitly constructing \tcode{optional<T\&>} and then using copy-assignment. Move-assignment is the same as copy-assignment, since only pointer copy is involved.
 
 \section{Copy and Assignment of optional<U\&>\&\& to optional<T>}
-Care must be take to prevent the assignment of a movable optional to disallow the copy or assignment of the underlying referred to value to be stolen. The \tcode{optional<T>::optional<U\&> const\&} assignment or copy constructor should be used instead, which also needs to check slightly different constraints for \tcode{converts-from-any-cvref} and for testing \tcode{is_assignable}. We thank Jan Kokemüller for uncovering this bug. The bug seemns to be present in many optional implementations that support references.
+Care must be take to prevent the assignment of a movable optional to disallow the copy or assignment of the underlying referred to value to be stolen. The \tcode{optional<T>::optional<U\&> const\&} assignment or copy constructor should be used instead, which also needs to check slightly different constraints for \tcode{converts-from-any-cvref} and for testing \tcode{is_assignable}. We thank Jan Kokemüller for uncovering this bug. The bug seems to be present in many optional implementations that support references.
 
 
 \chapter{Proposal}
@@ -412,8 +412,8 @@ The proposed changes are relative to the current working draft \cite{N5001}.
 
 A pure library extension, affecting no other parts of the library or language.
 
-\chapter{Acknowledgements}
-Many thanks to all of the reviewers and authors of beman.optional, \cite{The_Beman_Project_beman_optional}, in particular A. Jiang, Darius Neațu, David Sankel, Eddie Nolan, Jan Kokemüller, Jeff Garland, and River. Tomasz Kamiński provided extensive support for the library wording of optional<T\&>.
+\chapter{Acknowledgments}
+Many thanks to all of the reviewers and authors of beman.optional, \cite{The_Beman_Project_beman_optional}, in particular A. Jiang, Darius Neațu, David Sankel, Eddie Nolan, Jan Kokemüller, Jeff Garland, and River (Xueqing) Wu. Tomasz Kamiński provided extensive support for the library wording of optional<T\&>.
 
 
 \chapter*{Document history}
