@@ -1474,10 +1474,7 @@ constexpr T& value() const;
   \effects
   Equivalent to:
   \begin{codeblock}
-if (has_value()) {
-  return *@\exposid{val}@;
-}
-throw bad_optional_access();
+return has_value() ? *@\exposid{val}@ : throw bad_optional_access();
   \end{codeblock}
 \end{itemdescr}
 
@@ -1498,11 +1495,7 @@ constexpr T value_or(U&& u) const;
   \effects
   Equivalent to:
   \begin{codeblock}
-if (has_value()) {
-    return remove_cv_t<T>(*@\exposid{val}@);
-} else {
-    return std::forward<U>(u);
-}
+return has_value() ? remove_cv_t<T>(*@\exposid{val}@)@ : std::forward<U>(u);
   \end{codeblock}
 \end{itemdescr}
 

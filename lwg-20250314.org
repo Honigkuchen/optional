@@ -68,7 +68,7 @@ Stopping before [optionalref.mod]
 * Checklist
 SD presenting
 [optionalref.iterators]
-- [ ] TS: p1: “These types” -> “This type”
+- [X] TS: p1: “These types” -> “This type”
 DK: there is no const_iterator?
 SD: no, constness is shallow
 JW: should there be a const_iterator typedef?
@@ -78,11 +78,11 @@ TK: referring to *val
 SD: I have “referring to the contained value”
 [optionalref.observe]
 SD: there should be hardened preconditions once that landed
-- [ ] JW: make value() a one-liner as in non-specialization
+- [X] JW: make value() a one-liner as in non-specialization
 - [ ] TK: value_or should remove_cv_t
 - [ ] TK: the mandate shouldn’t have a std:: qualification
-- [ ] JW: should the stable names use [optional.ref]
-- [ ] JW: also a one-liner on value_or
+- [X] JW: should the stable names use [optional.ref]
+- [X] JW: also a one-liner on value_or
 - [ ] JW: we did something on value_or() to allow using {} as argument
 JW: the Mandate on value_or() looks different
 SD: over here it is a bit longer and we should probably fix the other one
