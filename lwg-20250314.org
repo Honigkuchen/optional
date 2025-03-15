@@ -89,10 +89,10 @@ SD: over here it is a bit longer and we should probably fix the other one
 [optionalref.monadics]
 TK: in p3 it becomes valid contained type?
 SD: yes
-- [ ] JW: in p7 what is U? There is something missing
-- [ ] TK: it should be invoke_result_t<F>
-- [ ] TK: the definition of U should be consistent
-- [ ] JW: in p4: we shouldn’t use trailing return types here
+- [X] JW: in p7 what is U? There is something missing
+- [X] TK: it should be invoke_result_t<F>
+- [X] TK: the definition of U should be consistent
+- [X] JW: in p4: we shouldn’t use trailing return types here
 TK: we can remove the mandates
 SD: no, it is needed
 JW: now that there is a “contains” we could write it exactly the same as normal optional

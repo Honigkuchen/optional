@@ -1534,7 +1534,7 @@ constexpr auto transform(F&& f) const -> optional<invoke_result_t<F, T&>>;
 
 \begin{itemdescr}
   \pnum
-  Let \tcode{U} be \tcode{remove_cv_t<invoke_result_t<F, T\&>>}.
+  Let \tcode{U} be \tcode{invoke_result_t<F, T\&>}.
 
   \pnum
   \mandates
@@ -1558,6 +1558,8 @@ constexpr optional or_else(F&& f) const;
 \end{itemdecl}
 
 \begin{itemdescr}
+  \pnum
+  Let \tcode{U} be \tcode{invoke_result_t<F>}.
   \pnum
   \mandates
   \tcode{is_same_v<remove_cvref_t<U>, optional>} is \tcode{true}.
