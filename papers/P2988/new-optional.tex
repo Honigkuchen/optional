@@ -1440,6 +1440,10 @@ constexpr T* operator->() const noexcept;
 
 \begin{itemdescr}
   \pnum
+  \hardexpects
+  \tcode{has_value()} is \tcode{true}.
+
+  \pnum
   \returns
   \tcode{\exposid{val}}.
 
@@ -1451,7 +1455,7 @@ constexpr T& operator*() const noexcept;
 
 \begin{itemdescr}
    \pnum
-   \expects
+   \hardexpects
    \tcode{has_value()} is \tcode{true}
 
    \pnum
