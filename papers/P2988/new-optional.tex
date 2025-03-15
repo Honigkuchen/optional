@@ -1076,7 +1076,8 @@ namespace std {
 \end{codeblock}
 
 \pnum
-An object of \tcode{optional<T\&>} \defnx{contains a value}{contains a value!\idxcode{optional}} if and only if \tcode{\exposid{val} != nullptr} is \tcode{true}.
+An object of \tcode{optional<T\&>} \defnx{contains a value}{contains a value!\idxcode{optional.ref}} if and only if \tcode{\exposid{val} != nullptr} is \tcode{true}.
+When an \tcode{optional<T\&>} contains a value, the \defnx{contained value}{contained value!\idxcode{optional.ref}} is a reference to the \tcode{T} object that \exposid{val} points to.
 
 \rSec3[optional.ref.ctor]{Constructors}
 
@@ -1541,15 +1542,12 @@ constexpr auto transform(F&& f) const -> optional<invoke_result_t<F, T&>>;
   \tcode{U} is a valid contained type for optional.
 
   \pnum
-  \effects
-  Equivalent to:
-  \begin{codeblock}
-if (has_value()) {
-    return optional<U>{invoke(std::forward<F>(f), *@\exposid{val}@)};
-} else {
-    return optional<U>{};
-}
-  \end{codeblock}
+  \pnum
+  \returns
+  If \tcode{*this} contains a value, an \tcode{optional<U>} object
+  whose contained value is direct-non-list-initialized with
+  \tcode{invoke(std::forward<F>(f), *\exposid{val})};
+  otherwise, \tcode{optional<U>()}.
 \end{itemdescr}
 
 \begin{itemdecl}
