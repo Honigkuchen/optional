@@ -1673,21 +1673,6 @@ Equivalent to: \tcode{return optional<T>(in_place, il, std::forward<Args>(args).
 
 
 \rSec2[optional.hash]{Hash support}
-\indexlibrarymember{hash}{optional}%
-\begin{itemdecl}
-template<class T> struct hash<optional<T>>;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-The specialization \tcode{hash<optional<T>>} is enabled\iref{unord.hash}
-if and only if \tcode{hash<remove_const_t<T>>} is enabled.
-When enabled, for an object \tcode{o} of type \tcode{optional<T>},
-if \tcode{o.has_value() == true}, then \tcode{hash<optional<T>>()(o)}
-evaluates to the same value as \tcode{hash<remove_const_t<T>>()(*o)};
-otherwise it evaluates to an unspecified value.
-The member functions are not guaranteed to be \keyword{noexcept}.
-\end{itemdescr}
 
 \begin{addedblock}
 \Sec2[version.syn]{Feature-test macro}
