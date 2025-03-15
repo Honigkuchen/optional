@@ -91,7 +91,7 @@ TK: in p3 it becomes valid contained type?
 SD: yes
 - [ ] JW: in p7 what is U? There is something missing
 - [ ] TK: it should be invoke_result_t<F>
-TK: the definition of U should be consistent
+- [ ] TK: the definition of U should be consistent
 - [ ] JW: in p4: we shouldn’t use trailing return types here
 TK: we can remove the mandates
 SD: no, it is needed
