@@ -1495,7 +1495,7 @@ constexpr T value_or(U&& u) const;
   \effects
   Equivalent to:
   \begin{codeblock}
-return has_value() ? remove_cv_t<T>(*@\exposid{val}@)@ : std::forward<U>(u);
+return has_value() ? *@\exposid{val}@ : std::forward<U>(u);
   \end{codeblock}
 \end{itemdescr}
 
