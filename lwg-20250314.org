@@ -96,7 +96,7 @@ SD: yes
 TK: we can remove the mandates
 SD: no, it is needed
 JW: now that there is a “contains” we could write it exactly the same as normal optional
-- [ ] TK: we want to use the same wording for transform()
+- [X] TK: we want to use the same wording for transform()
 Stopping before [optionalref.mod]
 
 Note add "contained value" definition for optional<T&>
