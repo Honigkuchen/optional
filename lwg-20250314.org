@@ -83,7 +83,7 @@ SD: there should be hardened preconditions once that landed
 - [X] TK: the mandate shouldn’t have a std:: qualification
 - [X] JW: should the stable names use [optional.ref]
 - [X] JW: also a one-liner on value_or
-- [ ] JW: we did something on value_or() to allow using {} as argument
+- [X] JW: we did something on value_or() to allow using {} as argument
 JW: the Mandate on value_or() looks different
 SD: over here it is a bit longer and we should probably fix the other one
 [optionalref.monadics]
