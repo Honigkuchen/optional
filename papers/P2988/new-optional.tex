@@ -1156,8 +1156,8 @@ constexpr explicit(@\seebelow@) optional(optional<U>& rhs) noexcept(@\seebelow@)
   \constraints
   \begin{itemize}
   \item \tcode{is_constructible_v<T\&, U\&>} is \tcode{true},
-  \item \tcode{std::is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
-  \item \tcode{std::is_same_v<T\&, U>} is \tcode{false}.
+  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
+  \item \tcode{is_same_v<T\&, U>} is \tcode{false}.
   \end{itemize}
 
   \pnum
@@ -1197,8 +1197,8 @@ constexpr explicit(@\seebelow@) optional(const optional<U>& rhs) noexcept(@\seeb
   \constraints
   \begin{itemize}
   \item \tcode{is_constructible_v<T\&, const U\&>} is \tcode{true},
-  \item \tcode{std::is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
-  \item \tcode{std::is_same_v<T\&, U>} is \tcode{false}.
+  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
+  \item \tcode{is_same_v<T\&, U>} is \tcode{false}.
   \end{itemize}
 
   \pnum
@@ -1238,8 +1238,8 @@ constexpr explicit(@\seebelow@) optional(optional<U>&& rhs) noexcept(@\seebelow@
   \constraints
   \begin{itemize}
   \item \tcode{is_constructible_v<T\&, U>} is \tcode{true},
-  \item \tcode{std::is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
-  \item \tcode{std::is_same_v<T\&, U>} is \tcode{false}.
+  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
+  \item \tcode{is_same_v<T\&, U>} is \tcode{false}.
   \end{itemize}
 
   \pnum
@@ -1487,8 +1487,8 @@ constexpr T value_or(U&& u) const;
   \pnum
   \mandates
   \begin{itemize}
-    \item \tcode{is_constructible_v<std::remove_cv_t<T>, T\&>} is \tcode{true}.
-    \item \tcode{is_convertible_v<U, std::remove_cv_t<T>>} is \tcode{true}.
+    \item \tcode{is_constructible_v<remove_cv_t<T>, T\&>} is \tcode{true}.
+    \item \tcode{is_convertible_v<U, remove_cv_t<T>>} is \tcode{true}.
   \end{itemize}
 
   \pnum

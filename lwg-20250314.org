@@ -80,7 +80,7 @@ SD: I have “referring to the contained value”
 SD: there should be hardened preconditions once that landed
 - [X] JW: make value() a one-liner as in non-specialization
 - [ ] TK: value_or should remove_cv_t
-- [ ] TK: the mandate shouldn’t have a std:: qualification
+- [X] TK: the mandate shouldn’t have a std:: qualification
 - [X] JW: should the stable names use [optional.ref]
 - [X] JW: also a one-liner on value_or
 - [ ] JW: we did something on value_or() to allow using {} as argument
