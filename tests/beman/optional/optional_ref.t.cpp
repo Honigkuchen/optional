@@ -101,6 +101,17 @@ TEST(OptionalRefTest, BaseDerivedCastConstruction) {
     EXPECT_TRUE(dopt2.has_value());
 }
 
+TEST(OptionalRefTest, BaseDerivedCastEmplace) {
+    base                                b;
+    derived&                            dref(b); // ok
+    beman::optional::optional<derived&> dopt1;
+    dopt1.emplace(b);
+    beman::optional::optional<derived&> dopt2;
+    dopt2.emplace(dref);
+    EXPECT_TRUE(dopt1.has_value());
+    EXPECT_TRUE(dopt2.has_value());
+}
+
 TEST(OptionalRefTest, Assignment) {
     beman::optional::optional<int&> i1;
     EXPECT_FALSE(i1);
@@ -464,6 +475,11 @@ TEST(OptionalRefTest, Observers) {
     // auto t3 = so1.value_or("bark");
     // auto t4 = so2.value_or("bark");
     // std::tuple<const std::string&> t("meow");
+
+    auto t5 = so1.value_or({});
+    auto t6 = so2.value_or({});
+    EXPECT_EQ(t5, std::string());
+    EXPECT_EQ(t6, meow);
 
     auto success = std::is_same<decltype(o1.value()), int&>::value;
     static_assert(std::is_same<decltype(o1.value()), int&>::value);
