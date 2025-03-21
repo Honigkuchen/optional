@@ -219,8 +219,8 @@ that meets the \oldconcept{Destructible} requirements (cpp17.destructible).
 
 \begin{addedblock}
 \pnum
-A type \tcode{X} is a \defnx{valid contained type}{valid contained type!\idxcode{optional}} for \tcode{optional} if \tcode{X} is an lvalue reference type,
-or a complete non-array object type, and \tcode{X} is a type other than \tcode{in_place_t} or \tcode{nullopt_t}.
+A type \tcode{X} is a \defnx{valid contained type}{valid contained type!\idxcode{optional}} for \tcode{optional} if \tcode{X} is an lvalue reference type
+or a complete non-array object type, and \tcode{remove_cvref<X>} is a type other than \tcode{in_place_t} or \tcode{nullopt_t}.
 
 \pnum
 \tcode{T} shall be an object type that is a valid contained type for \tcode{optional} and meets the \oldconcept{Destructible} requirements (cpp17.destructible).
@@ -1064,13 +1064,12 @@ namespace std {
       constexpr void reset() noexcept;
 
     private:
-    T* @\exposid{val}@; // \expos
+      T* @\exposid{val}@; // \expos
 
-    // \ref{optional.ref.expos}, exposition only helper functions
-    template <class U>
-    constexpr void @\exposid{convert-ref-init-val}@(U&& u) // \expos
-  };
-
+      // \ref{optional.ref.expos}, exposition only helper functions
+      template <class U>
+      constexpr void @\exposid{convert-ref-init-val}@(U&& u) // \expos
+    };
 }
 \end{codeblock}
 
