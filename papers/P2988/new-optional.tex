@@ -221,9 +221,8 @@ that meets the \oldconcept{Destructible} requirements (cpp17.destructible).
 \pnum
 A type \tcode{X} is a \defnx{valid contained type}{valid contained type!\idxcode{optional}} for \tcode{optional} if \tcode{X} is an lvalue reference type
 or a complete non-array object type, and \tcode{remove_cvref_t<X>} is a type other than \tcode{in_place_t} or \tcode{nullopt_t}.
-
 \pnum
-\tcode{T} shall be an object type that is a valid contained type for \tcode{optional} and meets the \oldconcept{Destructible} requirements (cpp17.destructible).
+If a specialization of  \tcode{optional} is instantiated with a type  \tcode{T} that is not a valid contained type for  \tcode{optional}, the program is ill-formed. If  \tcode{T} is an object type,  \tcode{T} shall meet the \oldconcept{Destructible} requirements (cpp17.destructible).
 \end{addedblock}
 
 \rSec3[optional.ctor]{Constructors}
@@ -1057,14 +1056,14 @@ namespace std {
 
       // \ref{optional.ref.monadic}, monadic operations
       template <class F> constexpr auto and_then(F&& f) const;
-      template <class F> constexpr auto transform(F&& f) const -> optional<invoke_result_t<F, T&>>;
+      template <class F> constexpr optional<invoke_result_t<F, T&>> transform(F&& f) const;
       template <class F> constexpr optional or_else(F&& f) const;
 
       // \ref{optional.ref.mod}, modifiers
       constexpr void reset() noexcept;
 
     private:
-      T* @\exposid{val}@; // \expos
+      T* @\exposid{val}@ = nullopt; // \expos
 
       // \ref{optional.ref.expos}, exposition only helper functions
       template <class U>
@@ -1075,7 +1074,7 @@ namespace std {
 
 \pnum
 An object of \tcode{optional<T\&>} \defnx{contains a value}{contains a value!\idxcode{optional.ref}} if and only if \tcode{\exposid{val} != nullptr} is \tcode{true}.
-When an \tcode{optional<T\&>} contains a value, the \defnx{contained value}{contained value!\idxcode{optional.ref}} is a reference to the \tcode{T} object that \exposid{val} points to.
+When an \tcode{optional<T\&>} contains a value, the \defnx{contained value}{contained value!\idxcode{optional.ref}} is a reference to  \tcode{*val} .
 
 \rSec3[optional.ref.ctor]{Constructors}
 
@@ -1086,11 +1085,6 @@ constexpr optional(nullopt_t) noexcept;
 
 \begin{itemdescr}
 \pnum
-\effects
-Equivalent to:
-\begin{codeblock}
-@\exposid{val} = nullptr;
-\end{codeblock}
 \ensures
 \tcode{*this} does not contain a value.
 \end{itemdescr}
@@ -1120,16 +1114,17 @@ constexpr explicit optional(in_place_t, Arg&& arg);
 
 \begin{itemdecl}
 template <class U>
-  constexpr explicit(@\seebelow@) optional(U&& u) noexcept(@\seebelow@);
+constexpr explicit(!is_convertible_v<U, T&>)
+optional(U&& u) noexcept(is_nothrow_constructible_v<T&, U>);
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
   \constraints
   \begin{itemize}
-  \item \tcode{is_constructible_v<T\&, U>} is \tcode{true},
+  \item \tcode{(is_same_v<remove_cvref_t<U>, optional>)} is \tcode{false},
   \item \tcode{(is_same_v<remove_cvref_t<U>, in_place_t>)} is \tcode{false}, and
-  \item \tcode{(is_same_v<remove_cvref_t<U>, optional>)} is \tcode{false}.
+  \item \tcode{is_constructible_v<T\&, U>} is \tcode{true}.
   \end{itemize}
 
   \pnum
@@ -1142,31 +1137,26 @@ template <class U>
 
   \pnum
   \remarks
-  The expression inside \keyword{explicit} is equivalent to:
-  \begin{codeblock}
-!is_convertible_v<U, T&>
-  \end{codeblock}
-  The expression inside \keyword{noexcept} is equivalent to:
-  \begin{codeblock}
-is_nothrow_constructible_v<T&, U>
-  \end{codeblock}
   This constructor is defined as deleted if
-  \tcode{reference_constructs_from_temporary_v<T\&, U>}
-  is \tcode{true}
+\begin{codeblock}
+reference_constructs_from_temporary_v<T&, U>
+\end{codeblock}
+  is \tcode{true}.
 \end{itemdescr}
 
 \begin{itemdecl}
 template <class U>
-constexpr explicit(@\seebelow@) optional(optional<U>& rhs) noexcept(@\seebelow@);
+constexpr explicit(!is_convertible_v<U&, T&>)
+optional(optional<U>& rhs) noexcept(is_nothrow_constructible_v<T&, U&>);
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
   \constraints
   \begin{itemize}
-  \item \tcode{is_constructible_v<T\&, U\&>} is \tcode{true},
-  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
-  \item \tcode{is_same_v<T\&, U>} is \tcode{false}.
+  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false},
+  \item \tcode{is_same_v<T\&, U>} is \tcode{false}, and
+  \item \tcode{is_constructible_v<T\&, U\&>} is \tcode{true}.
   \end{itemize}
 
   \pnum
@@ -1175,39 +1165,32 @@ constexpr explicit(@\seebelow@) optional(optional<U>& rhs) noexcept(@\seebelow@)
   \begin{codeblock}
 if (rhs.has_value()) {
     @\exposid{convert-ref-init-val}@(*rhs);
-} else {
-    @\exposid{val}@ = nullptr;
 }
   \end{codeblock}
 
   \pnum
   \remarks
-  The expression inside \keyword{explicit} is equivalent to:
-  \begin{codeblock}
-!is_convertible_v<U&, T&>
-  \end{codeblock}
-  The expression inside \keyword{noexcept} is equivalent to:
-  \begin{codeblock}
-is_nothrow_constructible_v<T&, U&>
-  \end{codeblock}
   This constructor is defined as deleted if
-  \tcode{reference_constructs_from_temporary_v<T\&, U\&>}
+\begin{codeblock}
+reference_constructs_from_temporary_v<T&, U&>
+\end{codeblock}
   is \tcode{true}.
 \end{itemdescr}
 
 
 \begin{itemdecl}
 template <class U>
-constexpr explicit(@\seebelow@) optional(const optional<U>& rhs) noexcept(@\seebelow@);
+constexpr explicit(!is_convertible_v<const U&, T&>)
+optional(const optional<U>& rhs) noexcept(is_nothrow_constructible_v<T&, const U&>);
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
   \constraints
   \begin{itemize}
-  \item \tcode{is_constructible_v<T\&, const U\&>} is \tcode{true},
-  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
-  \item \tcode{is_same_v<T\&, U>} is \tcode{false}.
+  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false},
+  \item \tcode{is_same_v<T\&, U>} is \tcode{false}, and
+  \item \tcode{is_constructible_v<T\&, const U\&>} is \tcode{true}.
   \end{itemize}
 
   \pnum
@@ -1216,39 +1199,32 @@ constexpr explicit(@\seebelow@) optional(const optional<U>& rhs) noexcept(@\seeb
   \begin{codeblock}
 if (rhs.has_value()) {
     @\exposid{convert-ref-init-val}@(*rhs);
-} else {
-    @\exposid{val}@ = nullptr;
 }
   \end{codeblock}
 
 
   \pnum
   \remarks
-  The expression inside \keyword{explicit} is equivalent to:
-  \begin{codeblock}
-!is_convertible_v<const U&, T&>
-  \end{codeblock}
-  The expression inside \keyword{noexcept} is equivalent to:
-  \begin{codeblock}
-is_nothrow_constructible_v<T&, const U&>
-  \end{codeblock}
   This constructor is defined as deleted if
-\tcode{reference_constructs_from_temporary_v<T\&, const U\&>}
-  is \tcode{true}
+\begin{codeblock}
+reference_constructs_from_temporary_v<T&, const U&>
+\end{codeblock}
+  is \tcode{true}.
 \end{itemdescr}
 
 \begin{itemdecl}
 template <class U>
-constexpr explicit(@\seebelow@) optional(optional<U>&& rhs) noexcept(@\seebelow@);
+constexpr explicit(!is_convertible_v<U, T&>)
+optional(optional<U>&& rhs) noexcept(is_nothrow_constructible_v<T&, U>);
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
   \constraints
   \begin{itemize}
-  \item \tcode{is_constructible_v<T\&, U>} is \tcode{true},
-  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
-  \item \tcode{is_same_v<T\&, U>} is \tcode{false}.
+  \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false},
+  \item \tcode{is_same_v<T\&, U>} is \tcode{false}, and
+  \item \tcode{is_constructible_v<T\&, U>} is \tcode{true}.
   \end{itemize}
 
   \pnum
@@ -1257,38 +1233,31 @@ constexpr explicit(@\seebelow@) optional(optional<U>&& rhs) noexcept(@\seebelow@
   \begin{codeblock}
 if (rhs.has_value()) {
     @\exposid{convert-ref-init-val}@(*std::move(rhs));
-} else {
-    @\exposid{val}@ = nullptr;
 }
   \end{codeblock}
 
   \pnum
   \remarks
-  The expression inside \keyword{explicit} is equivalent to:
-  \begin{codeblock}
-!is_convertible_v<U, T&>
-  \end{codeblock}
-  The expression inside \keyword{noexcept} is equivalent to:
-  \begin{codeblock}
-is_nothrow_constructible_v<T&, U>
-  \end{codeblock}
   This constructor is defined as deleted if
-\tcode{reference_constructs_from_temporary_v<T\&, U>}
-  is \tcode{true}
+\begin{codeblock}
+reference_constructs_from_temporary_v<T&, U>
+\end{codeblock}
+  is \tcode{true}.
 \end{itemdescr}
 
 \begin{itemdecl}
 template <class U>
-constexpr explicit(@\seebelow@) optional(const optional<U>&& rhs) noexcept(@\seebelow@);
+constexpr explicit(!is_convertible_v<const U, T&>)
+optional(const optional<U>&& rhs) noexcept(is_nothrow_constructible_v<T&, const U>);
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
   \constraints
   \begin{itemize}
-  \item \tcode{is_constructible_v<T\&, const U>} is \tcode{true},
   \item \tcode{is_same_v<remove_cv_t<T>, optional<U>>} is \tcode{false}, and
   \item \tcode{is_same_v<T\&, U>} is \tcode{false}.
+  \item \tcode{is_constructible_v<T\&, const U>} is \tcode{true},
   \end{itemize}
 
   \pnum
@@ -1297,23 +1266,15 @@ constexpr explicit(@\seebelow@) optional(const optional<U>&& rhs) noexcept(@\see
   \begin{codeblock}
 if (rhs.has_value()) {
   @\exposid{convert-ref-init-val}@(*std::move(rhs));
-} else {
-    @\exposid{val}@ = nullptr;
 }
   \end{codeblock}
 
   \pnum
   \remarks
-  The expression inside \keyword{explicit} is equivalent to:
-  \begin{codeblock}
-!is_convertible_v<const U, T&>
-  \end{codeblock}
-  The expression inside \keyword{noexcept} is equivalent to:
-  \begin{codeblock}
-is_nothrow_constructible_v<T&, const U>
-  \end{codeblock}
   This constructor is defined as deleted if
-\tcode{reference_constructs_from_temporary_v<T\&, const U>}
+\begin{codeblock}
+reference_constructs_from_temporary_v<T&, const U>
+\end{codeblock}
   is \tcode{true}.
 \end{itemdescr}
 
@@ -1344,7 +1305,7 @@ constexpr optional& operator=(nullopt_t) noexcept;
 
 \begin{itemdecl}
 template <class U>
-constexpr T& emplace(U&& u) noexcept(@\seebelow@);
+constexpr T& emplace(U&& u) noexcept(is_nothrow_constructible_v<T&, U>);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1360,11 +1321,6 @@ constexpr T& emplace(U&& u) noexcept(@\seebelow@);
   Equivalent to: \tcode{\exposid{convert-ref-init-val}(std::forward<U>(u));}
 
   \pnum
-  \remarks
-  The expression inside \keyword{noexcept} is equivalent to:
-  \begin{codeblock}
-is_nothrow_constructible_v<T&, U>
-  \end{codeblock}
 \end{itemdescr}
 
 
@@ -1454,7 +1410,7 @@ constexpr T& operator*() const noexcept;
 \begin{itemdescr}
    \pnum
    \hardexpects
-   \tcode{has_value()} is \tcode{true}
+   \tcode{has_value()} is \tcode{true}.
 
    \pnum
    \returns
@@ -1546,16 +1502,12 @@ if (has_value()) {
 
 \begin{itemdecl}
 template <class F>
-constexpr auto transform(F&& f) const -> optional<invoke_result_t<F, T&>>;
+constexpr optional<invoke_result_t<F, T&>> transform(F&& f) const;
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
   Let \tcode{U} be \tcode{invoke_result_t<F, T\&>}.
-
-  \pnum
-  \mandates
-  \tcode{U} is a valid contained type for optional.
 
   \pnum
   \pnum
@@ -1573,10 +1525,11 @@ constexpr optional or_else(F&& f) const;
 
 \begin{itemdescr}
   \pnum
-  Let \tcode{U} be \tcode{invoke_result_t<F>}.
+  \constraints
+  \tcode{F} models \tcode{\libconcept{invocable}<>}.
   \pnum
   \mandates
-  \tcode{is_same_v<remove_cvref_t<U>, optional>} is \tcode{true}.
+  \tcode{is_same_v<remove_cvref_t<invoke_result_t<F>>, optional>} is \tcode{true}.
 
   \pnum
   \effects
@@ -1616,7 +1569,6 @@ constexpr void @\exposid{convert-ref-init-val}@(U&& u) ;  // \expos
 \end{itemdecl}
 
 \begin{itemdescr}
-  \pnum
   \pnum
   \effects
   Creates a variable \tcode{r} as if by \tcode{T\& r(std::forward<U>(u));} and then initializes \exposid{val} with \tcode{addressof(r)}.
@@ -1704,6 +1656,7 @@ Equivalent to: \tcode{return optional<T>(in_place, il, std::forward<Args>(args).
 Add the following macro definition to [version.syn], header <version> synopsis, with the value selected by the editor to reflect the date of adoption of this paper:
 
 \begin{codeblock}
-  #define __cpp_lib_optional_ref 20XXXXL // also in <optional>
+  #define __cpp_lib_freestanding_optional 20XXXXL // also in <optional>
+  #define __cpp_lib_optional              20XXXXL // also in <optional>
 \end{codeblock}
 \end{addedblock}
