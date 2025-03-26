@@ -220,7 +220,7 @@ that meets the \oldconcept{Destructible} requirements (cpp17.destructible).
 \begin{addedblock}
 \pnum
 A type \tcode{X} is a \defnx{valid contained type}{valid contained type!\idxcode{optional}} for \tcode{optional} if \tcode{X} is an lvalue reference type
-or a complete non-array object type, and \tcode{remove_cvref<X>} is a type other than \tcode{in_place_t} or \tcode{nullopt_t}.
+or a complete non-array object type, and \tcode{remove_cvref_t<X>} is a type other than \tcode{in_place_t} or \tcode{nullopt_t}.
 
 \pnum
 \tcode{T} shall be an object type that is a valid contained type for \tcode{optional} and meets the \oldconcept{Destructible} requirements (cpp17.destructible).
@@ -1612,7 +1612,7 @@ constexpr void reset() noexcept;
 \rSec3[optional.ref.expos]{Exposition only helper functions}
 \begin{itemdecl}
 template <class U>
-constexpr void @\exposid{convert-ref-init-val}@(U&& u) // \expos
+constexpr void @\exposid{convert-ref-init-val}@(U&& u) ;  // \expos
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1697,6 +1697,6 @@ Equivalent to: \tcode{return optional<T>(in_place, il, std::forward<Args>(args).
 Add the following macro definition to [version.syn], header <version> synopsis, with the value selected by the editor to reflect the date of adoption of this paper:
 
 \begin{codeblock}
-  #define __cpp_lib_optional_ref 20XXXXL // also in <ranges>, <tuple>, <utility>
+  #define __cpp_lib_optional_ref 20XXXXL // also in <optional>
 \end{codeblock}
 \end{addedblock}
