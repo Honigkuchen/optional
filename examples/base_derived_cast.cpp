@@ -3,7 +3,6 @@
 
 #include <beman/optional/optional.hpp>
 
-
 struct derived;
 extern derived d;
 struct base {
@@ -23,6 +22,4 @@ int example() {
     return 0;
 }
 
-int main() {
-    example();
-}
+int main() { example(); }

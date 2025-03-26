@@ -52,9 +52,7 @@ int example() {
     return 0;
 }
 
-int main() {
-    example();
-}
+int main() { example(); }
 // # build example:
 // $ cmake --workflow --preset gcc-14
 //
