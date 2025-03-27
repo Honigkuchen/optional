@@ -11,8 +11,8 @@ class optional<T&> {
   public:
     using value_type = T;
     using iterator =
-        detail::contiguous_iterator<T,
-                                    optional>; // see [optionalref.iterators]
+        std::contiguous_iterator<T,
+                                 optional>; // see [optionalref.iterators]
   public:
     // \ref{optionalref.ctor}, constructors
 
@@ -22,14 +22,14 @@ class optional<T&> {
 
     template <class Arg>
         requires(std::is_constructible_v<T&, Arg> &&
-                 !detail::reference_constructs_from_temporary_v<T&, Arg>)
+                 !std::reference_constructs_from_temporary_v<T&, Arg>)
     constexpr explicit optional(in_place_t, Arg&& arg);
 
     template <class U>
         requires(std::is_constructible_v<T&, U> &&
                  !(std::is_same_v<std::remove_cvref_t<U>, in_place_t>) &&
                  !(std::is_same_v<std::remove_cvref_t<U>, optional>) &&
-                 !detail::reference_constructs_from_temporary_v<T&, U>)
+                 !std::reference_constructs_from_temporary_v<T&, U>)
     constexpr explicit(!std::is_convertible_v<U, T&>)
         optional(U&& u) noexcept(std::is_nothrow_constructible_v<T&, U>) {
         convert_ref_init_val(u);
@@ -39,7 +39,7 @@ class optional<T&> {
         requires(std::is_constructible_v<T&, U> &&
                  !(std::is_same_v<std::remove_cvref_t<U>, in_place_t>) &&
                  !(std::is_same_v<std::remove_cvref_t<U>, optional>) &&
-                 detail::reference_constructs_from_temporary_v<T&, U>)
+                 std::reference_constructs_from_temporary_v<T&, U>)
     constexpr optional(U&& u) = delete;
 
     // The full set of 4 overloads on optional<U> by value category, doubled to
@@ -50,7 +50,7 @@ class optional<T&> {
         requires(std::is_constructible_v<T&, U&> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 !detail::reference_constructs_from_temporary_v<T&, U&>)
+                 !std::reference_constructs_from_temporary_v<T&, U&>)
     constexpr explicit(!std::is_convertible_v<U&, T&>) optional(
         optional<U>& rhs) noexcept(std::is_nothrow_constructible_v<T&, U&>);
 
@@ -58,7 +58,7 @@ class optional<T&> {
         requires(std::is_constructible_v<T&, const U&> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 !detail::reference_constructs_from_temporary_v<T&, const U&>)
+                 !std::reference_constructs_from_temporary_v<T&, const U&>)
     constexpr explicit(!std::is_convertible_v<const U&, T&>)
         optional(const optional<U>& rhs) noexcept(
             std::is_nothrow_constructible_v<T&, const U&>);
@@ -67,7 +67,7 @@ class optional<T&> {
         requires(std::is_constructible_v<T&, U> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 !detail::reference_constructs_from_temporary_v<T&, U>)
+                 !std::reference_constructs_from_temporary_v<T&, U>)
     constexpr explicit(!std::is_convertible_v<U, T&>)
         optional(optional<U>&& rhs) noexcept(
             noexcept(std::is_nothrow_constructible_v<T&, U>));
@@ -76,7 +76,7 @@ class optional<T&> {
         requires(std::is_constructible_v<T&, const U> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 !detail::reference_constructs_from_temporary_v<T&, const U>)
+                 !std::reference_constructs_from_temporary_v<T&, const U>)
     constexpr explicit(!std::is_convertible_v<const U, T&>)
         optional(const optional<U>&& rhs) noexcept(
             noexcept(std::is_nothrow_constructible_v<T&, const U>));
@@ -85,28 +85,28 @@ class optional<T&> {
         requires(std::is_constructible_v<T&, U&> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 detail::reference_constructs_from_temporary_v<T&, U&>)
+                 std::reference_constructs_from_temporary_v<T&, U&>)
     constexpr optional(optional<U>& rhs) = delete;
 
     template <class U>
         requires(std::is_constructible_v<T&, const U&> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 detail::reference_constructs_from_temporary_v<T&, const U&>)
+                 std::reference_constructs_from_temporary_v<T&, const U&>)
     constexpr optional(const optional<U>& rhs) = delete;
 
     template <class U>
         requires(std::is_constructible_v<T&, U> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 detail::reference_constructs_from_temporary_v<T&, U>)
+                 std::reference_constructs_from_temporary_v<T&, U>)
     constexpr optional(optional<U>&& rhs) = delete;
 
     template <class U>
         requires(std::is_constructible_v<T&, const U> &&
                  !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
                  !std::is_same_v<T&, U> &&
-                 detail::reference_constructs_from_temporary_v<T&, const U>)
+                 std::reference_constructs_from_temporary_v<T&, const U>)
     constexpr optional(const optional<U>&& rhs) = delete;
 
     // \ref{optionalref.dtor}, destructor
@@ -119,7 +119,7 @@ class optional<T&> {
 
     template <class U>
         requires(std::is_constructible_v<T&, U> &&
-                 !detail::reference_constructs_from_temporary_v<T&, U>)
+                 !std::reference_constructs_from_temporary_v<T&, U>)
     constexpr T&
     emplace(U&& u) noexcept(std::is_nothrow_constructible_v<T&, U>);
 
@@ -151,14 +151,14 @@ class optional<T&> {
     constexpr void reset() noexcept;
 
   private:
-    T* value_; // exposition only
+    T* value_ = nullptr; // exposition only
 
     // \ref{optionalref.expos}, exposition only helper functions
     template <class U>
     constexpr void convert_ref_init_val(U&& u) {
-        //  Creates a variable, \tcode{r}, as if by \tcode{T\&
-        //  r(std::forward<Arg>(arg));} and then initializes \exposid{val} with
-        //  \tcode{addressof(r)}
+        // Creates a variable, \tcode{r},
+        // as if by \tcode{T\& r(std::forward<U>(u));}
+        // and then initializes \exposid{val} with \tcode{addressof(r)}
         T& r(std::forward<U>(u));
         value_ = std::addressof(r);
     }
@@ -166,17 +166,17 @@ class optional<T&> {
 
 //  \rSec3[optionalref.ctor]{Constructors}
 template <class T>
-constexpr optional<T&>::optional() noexcept : value_(nullptr) {}
+constexpr optional<T&>::optional() noexcept {}
 
 template <class T>
-constexpr optional<T&>::optional(nullopt_t) noexcept : value_(nullptr) {}
+constexpr optional<T&>::optional(nullopt_t) noexcept {}
 
 template <class T>
 template <class Arg>
     requires(std::is_constructible_v<T&, Arg> &&
-             !detail::reference_constructs_from_temporary_v<T&, Arg>)
+             !std::reference_constructs_from_temporary_v<T&, Arg>)
 constexpr optional<T&>::optional(in_place_t, Arg&& arg) {
-    convert_ref_init_val(arg);
+    convert_ref_init_val(std::forward<Arg>(arg));
 }
 
 // Clang is unhappy with the out-of-line definition
@@ -186,7 +186,7 @@ constexpr optional<T&>::optional(in_place_t, Arg&& arg) {
 //     requires(std::is_constructible_v<T&, U> &&
 //     !(is_same_v<remove_cvref_t<U>, in_place_t>) &&
 //              !(is_same_v<remove_cvref_t<U>, optional<T&>>) &&
-//              !detail::reference_constructs_from_temporary_v<T&, U>)
+//              !std::reference_constructs_from_temporary_v<T&, U>)
 // constexpr optional<T&>::optional(U&& u)
 // noexcept(is_nothrow_constructible_v<T&, U>)
 //     : value_(std::addressof(static_cast<T&>(std::forward<U>(u)))) {}
@@ -196,13 +196,11 @@ template <class U>
     requires(std::is_constructible_v<T&, U&> &&
              !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
              !std::is_same_v<T&, U> &&
-             !detail::reference_constructs_from_temporary_v<T&, U&>)
+             !std::reference_constructs_from_temporary_v<T&, U&>)
 constexpr optional<T&>::optional(optional<U>& rhs) noexcept(
     std::is_nothrow_constructible_v<T&, U&>) {
     if (rhs.has_value()) {
         convert_ref_init_val(*rhs);
-    } else {
-        value_ = nullptr;
     }
 }
 
@@ -211,13 +209,11 @@ template <class U>
     requires(std::is_constructible_v<T&, const U&> &&
              !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
              !std::is_same_v<T&, U> &&
-             !detail::reference_constructs_from_temporary_v<T&, const U&>)
+             !std::reference_constructs_from_temporary_v<T&, const U&>)
 constexpr optional<T&>::optional(const optional<U>& rhs) noexcept(
     std::is_nothrow_constructible_v<T&, const U&>) {
     if (rhs.has_value()) {
         convert_ref_init_val(*rhs);
-    } else {
-        value_ = nullptr;
     }
 }
 
@@ -226,13 +222,11 @@ template <class U>
     requires(std::is_constructible_v<T&, U> &&
              !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
              !std::is_same_v<T&, U> &&
-             !detail::reference_constructs_from_temporary_v<T&, U>)
+             !std::reference_constructs_from_temporary_v<T&, U>)
 constexpr optional<T&>::optional(optional<U>&& rhs) noexcept(
     noexcept(std::is_nothrow_constructible_v<T&, U>)) {
     if (rhs.has_value()) {
         convert_ref_init_val(*std::move(rhs));
-    } else {
-        value_ = nullptr;
     }
 }
 
@@ -241,13 +235,11 @@ template <class U>
     requires(std::is_constructible_v<T&, const U> &&
              !std::is_same_v<std::remove_cv_t<T>, optional<U>> &&
              !std::is_same_v<T&, U> &&
-             !detail::reference_constructs_from_temporary_v<T&, const U>)
+             !std::reference_constructs_from_temporary_v<T&, const U>)
 constexpr optional<T&>::optional(const optional<U>&& rhs) noexcept(
     noexcept(std::is_nothrow_constructible_v<T&, const U>)) {
     if (rhs.has_value()) {
         convert_ref_init_val(*std::move(rhs));
-    } else {
-        value_ = nullptr;
     }
 }
 
@@ -261,10 +253,10 @@ constexpr optional<T&>& optional<T&>::operator=(nullopt_t) noexcept {
 template <class T>
 template <class U>
     requires(std::is_constructible_v<T&, U> &&
-             !detail::reference_constructs_from_temporary_v<T&, U>)
+             !std::reference_constructs_from_temporary_v<T&, U>)
 constexpr T&
 optional<T&>::emplace(U&& u) noexcept(std::is_nothrow_constructible_v<T&, U>) {
-    convert_ref_init_val(u);
+    convert_ref_init_val(std::forward<U>(u));
     return *value_;
 }
 
@@ -358,7 +350,8 @@ template <class T>
 template <class F>
 constexpr optional<T&> optional<T&>::or_else(F&& f) const {
     using U = std::invoke_result_t<F>;
-    static_assert(std::is_same_v<std::remove_cvref_t<U>, optional>);
+    static_assert(std::is_same_v<std::remove_cvref_t<U>, optional>,
+                  "Result must be an optional");
     if (has_value()) {
         return *value_;
     } else {

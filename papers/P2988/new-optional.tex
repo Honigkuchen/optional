@@ -1502,12 +1502,12 @@ if (has_value()) {
 
 \begin{itemdecl}
 template <class F>
-constexpr optional<invoke_result_t<F, T&>> transform(F&& f) const;
+constexpr optional<remove_cv_t<invoke_result_t<F, T&>>> transform(F&& f) const;
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
-  Let \tcode{U} be \tcode{invoke_result_t<F, T\&>}.
+  Let \tcode{U} be \tcode{remove_cv_t<invoke_result_t<F, T\&>>}.
 
   \pnum
   \pnum
@@ -1653,7 +1653,7 @@ Equivalent to: \tcode{return optional<T>(in_place, il, std::forward<Args>(args).
 
 \begin{addedblock}
 \Sec2[version.syn]{Feature-test macro}
-Add the following macro definition to [version.syn], header <version> synopsis, with the value selected by the editor to reflect the date of adoption of this paper:
+Change the values of the following macro definition to [version.syn], header <version> synopsis, with the value selected by the editor to reflect the date of adoption of this paper:
 
 \begin{codeblock}
   #define __cpp_lib_freestanding_optional 20XXXXL // also in <optional>
