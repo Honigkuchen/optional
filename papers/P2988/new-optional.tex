@@ -1019,7 +1019,7 @@ namespace std {
       constexpr optional(const optional& rhs) noexcept = default;
 
       template <class Arg>
-      constexpr_func explicit optional(in_place_t, Arg&& arg);
+      constexpr explicit optional(in_place_t, Arg&& arg);
       template <class U>
       constexpr explicit(@\seebelow@) optional(U&& u) noexcept(@\seebelow@);
       template <class U>
@@ -1052,7 +1052,7 @@ namespace std {
       constexpr explicit operator bool() const noexcept;
       constexpr bool     has_value() const noexcept;
       constexpr T&       value() const;                                // freestanding-deleted
-      template <class U> constexpr remove_cv_t<T> value_or(U&& u) const;
+      template<class U = remove_cv_t<T>> constexpr remove_cv_t<T> value_or(U&& u) const;
 
       // \ref{optional.ref.monadic}, monadic operations
       template <class F> constexpr auto and_then(F&& f) const;
@@ -1434,8 +1434,7 @@ return has_value() ? *@\exposid{val}@ : throw bad_optional_access();
 \end{itemdescr}
 
 \begin{itemdecl}
-template <class U>
-constexpr T value_or(U&& u) const;
+template<class U = remove_cv_t<T>> constexpr remove_cv_t<T> value_or(U&& u) const;
 \end{itemdecl}
 
 \begin{itemdescr}
