@@ -1014,8 +1014,8 @@ namespace std {
 
     public:
       // \ref{optional.ref.ctor}, constructors
-      constexpr optional() noexcept;
-      constexpr optional(nullopt_t) noexcept;
+      constexpr optional() noexcept = default;
+      constexpr optional(nullopt_t) noexcept : optional() {}
       constexpr optional(const optional& rhs) noexcept = default;
 
       template <class Arg>
@@ -1077,18 +1077,6 @@ An object of \tcode{optional<T\&>} \defnx{contains a value}{contains a value!\id
 When an \tcode{optional<T\&>} contains a value, the \defnx{contained value}{contained value!\idxcode{optional.ref}} is a reference to  \tcode{*val} .
 
 \rSec3[optional.ref.ctor]{Constructors}
-
-\begin{itemdecl}
-constexpr optional() noexcept;
-constexpr optional(nullopt_t) noexcept;
-\end{itemdecl}
-
-\begin{itemdescr}
-\pnum
-\ensures
-\tcode{*this} does not contain a value.
-\end{itemdescr}
-
 
 \begin{itemdecl}
 template <class Arg>
