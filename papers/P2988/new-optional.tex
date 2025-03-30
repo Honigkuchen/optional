@@ -20,11 +20,11 @@ object is tracked by the optional object.
 #include <compare>              // see \ref{compare.syn}
 
 namespace std {
-  // \ref{optional.optional}, class template \tcode{optional} for object types
+  // \ref{optional.optional}, class template \tcode{optional}
   template <class T>
   class optional; // partially freestanding
 
-  @\added{// \ref{optional.optional.ref}, class template \tcode{optional} for reference types }@
+  @\added{// \ref{optional.optional.ref}, partial specialization of \tcode{optional} for lvalue reference types }@
   @\added{template <class T> }@
   @\added{class optional<T\&>; // partially freestanding}@
 
