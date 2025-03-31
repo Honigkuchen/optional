@@ -124,7 +124,6 @@ namespace std {
     constexpr optional(nullopt_t) noexcept;
     constexpr optional(const optional&);
     constexpr optional(optional&&) noexcept(@\seebelow@);
-
     template<class... Args>
       constexpr explicit optional(in_place_t, Args&&...);
     template<class U, class... Args>
@@ -213,8 +212,10 @@ member \tcode{val} points to the contained value.
 
 \begin{removedblock}
 \tcode{T} shall be a type
+\tcode{T} shall be a type
 other than \cv{} \tcode{in_place_t} or \cv{} \tcode{nullopt_t}
-that meets the \oldconcept{Destructible} requirements (cpp17.destructible).
+that meets the \oldconcept{Destructible} requirements (\tcode{cpp17.destructible}).
+
 \end{removedblock}
 
 \begin{addedblock}
@@ -222,7 +223,7 @@ that meets the \oldconcept{Destructible} requirements (cpp17.destructible).
 A type \tcode{X} is a \defnx{valid contained type}{valid contained type!\idxcode{optional}} for \tcode{optional} if \tcode{X} is an lvalue reference type
 or a complete non-array object type, and \tcode{remove_cvref_t<X>} is a type other than \tcode{in_place_t} or \tcode{nullopt_t}.
 \pnum
-If a specialization of  \tcode{optional} is instantiated with a type  \tcode{T} that is not a valid contained type for  \tcode{optional}, the program is ill-formed. If  \tcode{T} is an object type,  \tcode{T} shall meet the \oldconcept{Destructible} requirements (cpp17.destructible).
+If a specialization of  \tcode{optional} is instantiated with a type  \tcode{T} that is not a valid contained type for  \tcode{optional}, the program is ill-formed. If  \tcode{T} is an object type,  \tcode{T} shall meet the \oldconcept{Destructible} requirements (\tcode{cpp17.destructible}).
 \end{addedblock}
 
 \rSec3[optional.ctor]{Constructors}
