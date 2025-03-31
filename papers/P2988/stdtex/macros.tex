@@ -39,19 +39,19 @@
 \newenvironment{addedblock}{\color{addclr}}{\color{black}}
 \newenvironment{removedblock}{\color{remclr}}{\color{black}}
 
-%%--------------------------------------------------
-%% Grammar extraction.
-%%--------------------------------------------------
-\def\gramSec[#1]#2{}
+%% %%--------------------------------------------------
+%% %% Grammar extraction.
+%% %%--------------------------------------------------
+%% \def\gramSec[#1]#2{}
 
-\makeatletter
-\newcommand{\FlushAndPrintGrammar}{%
-\immediate\closeout\XTR@out%
-\immediate\openout\XTR@out=std-gram-dummy.tmp%
-\def\gramSec[##1]##2{\rSec1[##1]{##2}}%
-\input{std-gram.ext}%
-}
-\makeatother
+%% \makeatletter
+%% \newcommand{\FlushAndPrintGrammar}{%
+%% \immediate\closeout\XTR@out%
+%% \immediate\openout\XTR@out=std-gram-dummy.tmp%
+%% \def\gramSec[##1]##2{\rSec1[##1]{##2}}%
+%% \input{std-gram.ext}%
+%% }
+%% \makeatother
 
 %%--------------------------------------------------
 % Escaping for index entries. Replaces ! with "! throughout its argument.
