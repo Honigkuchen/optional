@@ -17,7 +17,7 @@ object is tracked by the optional object.
 \indexheader{optional}%
 \begin{codeblock}
 // mostly freestanding
-#include <compare>              // see \ref{compare.syn}
+#include <compare>              // see \tcode{compare.syn}
 
 namespace std {
   // \ref{optional.optional}, class template \tcode{optional}
@@ -64,12 +64,12 @@ namespace std {
     constexpr compare_three_way_result_t<T, U>
       operator<=>(const optional<T>&, const optional<U>&);
 
-  // \ref{optional.nullops}, comparison with \tcode{nullopt}
+  // \tcode{optional.nullops}, comparison with \tcode{nullopt}
   template<class T> constexpr bool operator==(const optional<T>&, nullopt_t) noexcept;
   template<class T>
     constexpr strong_ordering operator<=>(const optional<T>&, nullopt_t) noexcept;
 
-  // \ref{optional.comp.with.t}, comparison with \tcode{T}
+  // \tcode{optional.comp.with.t}, comparison with \tcode{T}
   template<class T, class U> constexpr bool operator==(const optional<T>&, const U&);
   template<class T, class U> constexpr bool operator==(const T&, const optional<U>&);
   template<class T, class U> constexpr bool operator!=(const optional<T>&, const U&);
@@ -1441,6 +1441,7 @@ template<class U = remove_cv_t<T>> constexpr remove_cv_t<T> value_or(U&& u) cons
 \begin{itemdescr}
   \pnum
   Let \tcode{X} be \tcode{remove_cv_t<T>}.
+
   \pnum
   \mandates
     \tcode{is_constructible_v<X, T\&> \&\& is_convertible_v<U, X>} is \tcode{true}.
