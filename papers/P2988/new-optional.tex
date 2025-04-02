@@ -1440,14 +1440,16 @@ template<class U = remove_cv_t<T>> constexpr remove_cv_t<T> value_or(U&& u) cons
 
 \begin{itemdescr}
   \pnum
+  Let \tcode{X} be \tcode{remove_cv_t<T>}.
+  \pnum
   \mandates
-    \tcode{is_constructible_v<remove_cv_t<T>, T\&> \&\& is_convertible_v<U, remove_cv_t<T>>} is \tcode{true}.
+    \tcode{is_constructible_v<X, T\&> \&\& is_convertible_v<U, X>} is \tcode{true}.
 
   \pnum
   \effects
   Equivalent to:
   \begin{codeblock}
-return has_value() ? *@\exposid{val}@ : std::forward<U>(u);
+return has_value() ? *@\exposid{val}@ : static_cast<X>(std::forward<U>(u));
   \end{codeblock}
 \end{itemdescr}
 
