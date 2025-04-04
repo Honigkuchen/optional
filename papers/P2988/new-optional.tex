@@ -1075,7 +1075,7 @@ namespace std {
 
 \pnum
 An object of \tcode{optional<T\&>} \defnx{contains a value}{contains a value!\idxcode{optional.ref}} if and only if \tcode{\exposid{val} != nullptr} is \tcode{true}.
-When an \tcode{optional<T\&>} contains a value, the \defnx{contained value}{contained value!\idxcode{optional.ref}} is a reference to  \tcode{*val} .
+When an \tcode{optional<T\&>} contains a value, the \defnx{contained value}{contained value!\idxcode{optional.ref}} is a reference to  \tcode{\exposid{*val}}.
 
 \rSec3[optional.ref.ctor]{Constructors}
 
@@ -1344,7 +1344,7 @@ constexpr iterator begin() const noexcept;
   \pnum
   \returns
   If \tcode{has_value()} is \tcode{true},
-  an iterator referring to the contained value.
+  an iterator referring to \tcode{*\exposid{val}}.
   Otherwise, a past-the-end iterator value.
 
 \end{itemdescr}
@@ -1483,6 +1483,16 @@ constexpr optional<remove_cv_t<invoke_result_t<F, T&>>> transform(F&& f) const;
   Let \tcode{U} be \tcode{remove_cv_t<invoke_result_t<F, T\&>>}.
 
   \pnum
+  \mandates
+  The declaration
+\begin{codeblock}
+U u(invoke(std::forward<F>(f), *@\exposid{val}@));
+\end{codeblock}
+is well-formed for some invented variable \tcode{u}.
+\begin{note}
+There is no requirement that \tcode{U} is movable\iref{dcl.init.general}.
+\end{note}
+
   \pnum
   \returns
   If \tcode{*this} contains a value, an \tcode{optional<U>} object
