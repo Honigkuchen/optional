@@ -101,6 +101,17 @@ TEST(OptionalRefTest, BaseDerivedCastConstruction) {
     EXPECT_TRUE(dopt2.has_value());
 }
 
+TEST(OptionalRefTest, BaseDerivedCastEmplace) {
+    base                                b;
+    derived&                            dref(b); // ok
+    beman::optional::optional<derived&> dopt1;
+    dopt1.emplace(b);
+    beman::optional::optional<derived&> dopt2;
+    dopt2.emplace(dref);
+    EXPECT_TRUE(dopt1.has_value());
+    EXPECT_TRUE(dopt2.has_value());
+}
+
 TEST(OptionalRefTest, Assignment) {
     beman::optional::optional<int&> i1;
     EXPECT_FALSE(i1);
@@ -465,6 +476,11 @@ TEST(OptionalRefTest, Observers) {
     // auto t4 = so2.value_or("bark");
     // std::tuple<const std::string&> t("meow");
 
+    auto t5 = so1.value_or({});
+    auto t6 = so2.value_or({});
+    EXPECT_EQ(t5, std::string());
+    EXPECT_EQ(t6, meow);
+
     auto success = std::is_same<decltype(o1.value()), int&>::value;
     static_assert(std::is_same<decltype(o1.value()), int&>::value);
     EXPECT_TRUE(success);
@@ -523,6 +539,26 @@ TEST(OptionalRefTest, Observers) {
     success = std::is_same<decltype(std::move(ob1)->i_), int>::value;
     static_assert(std::is_same<decltype(std::move(ob1)->i_), int>::value);
     EXPECT_TRUE(success);
+}
+
+TEST(OptionalRefTest, AmbiguousConversion) {
+    struct TypedInt {
+        int c;
+        TypedInt(int i) : c(i) {}
+        operator int() const { return c; }
+    };
+
+    TypedInt c{42};
+
+    auto x1 = beman::optional::optional<int>{}.value_or(c);
+    auto x2 = beman::optional::optional<TypedInt>{}.value_or(7);
+
+    auto x3 = beman::optional::optional<int&>{}.value_or(c);
+    auto x4 = beman::optional::optional<TypedInt&>{}.value_or(7);
+    EXPECT_EQ(x1, 42);
+    EXPECT_EQ(x2, 7);
+    EXPECT_EQ(x3, 42);
+    EXPECT_EQ(x4, 7);
 }
 
 TEST(OptionalRefTest, MoveCheck) {

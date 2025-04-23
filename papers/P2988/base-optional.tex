@@ -934,8 +934,8 @@ constexpr T* operator->() noexcept;
 
 \begin{itemdescr}
 \pnum
-\expects
-\tcode{*this} contains a value.
+\hardexpects
+\tcode{has_value()} is \tcode{true}.
 
 \pnum
 \returns
@@ -954,8 +954,8 @@ constexpr T& operator*() & noexcept;
 
 \begin{itemdescr}
 \pnum
-\expects
-\tcode{*this} contains a value.
+\hardexpects
+\tcode{has_value()} is \tcode{true}.
 
 \pnum
 \returns
@@ -974,8 +974,8 @@ constexpr const T&& operator*() const && noexcept;
 
 \begin{itemdescr}
 \pnum
-\expects
-\tcode{*this} contains a value.
+\hardexpects
+\tcode{has_value()} is \tcode{true}.
 
 \pnum
 \effects
@@ -1292,7 +1292,7 @@ namespace std {
   class bad_optional_access : public exception {
   public:
     // see \ref{exception} for the specification of the special member functions
-    const char* what() const noexcept override;
+    constexpr const char* what() const noexcept override;
   };
 }
 \end{codeblock}
@@ -1302,13 +1302,15 @@ The class \tcode{bad_optional_access} defines the type of objects thrown as exce
 
 \indexlibrarymember{what}{bad_optional_access}%
 \begin{itemdecl}
-const char* what() const noexcept override;
+constexpr const char* what() const noexcept override;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \returns
-An \impldef{return value of \tcode{bad_optional_access::what}} \ntbs{}.
+An \impldef{return value of \tcode{bad_optional_access::what}} \ntbs{},
+which during constant evaluation is encoded with
+the ordinary literal encoding\iref{lex.ccon}.
 \end{itemdescr}
 
 \rSec2[optional.relops]{Relational operators}
@@ -1795,3 +1797,8 @@ evaluates to the same value as \tcode{hash<remove_const_t<T>>()(*o)};
 otherwise it evaluates to an unspecified value.
 The member functions are not guaranteed to be \keyword{noexcept}.
 \end{itemdescr}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "base"
+%%% End:
