@@ -14,7 +14,7 @@ jobs:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     container:
-      image: ghcr.io/bemanproject/testing-images:test-${{ matrix.config.tag }}
+      image: ghcr.io/bemanproject/infra:test-${{ matrix.config.tag }}
     strategy:
       fail-fast: false
       matrix:
