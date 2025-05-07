@@ -36,7 +36,7 @@ jobs:
         if: matrix.config.coverage
         run: |
           set -x
-          sudo apt-get install gcovr
+          sudo apt-get install -y gcovr
       - name: CMake Configure
         run: |
           set -x
