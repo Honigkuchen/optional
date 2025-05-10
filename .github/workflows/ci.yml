@@ -99,7 +99,7 @@ jobs:
         if: matrix.config.coverage
         uses: coverallsapp/github-action@main
         with:
-          file: ${{runner.workspace}}/optional/.build/coverage.json
+          file: .build/coverage.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   create-issue-when-fault:
