@@ -167,10 +167,14 @@ lint-manual: ## Run all manual tools in pre-commit
 
 .PHONY: coverage
 coverage: ## Build and run the tests with the GCOV profile and process the results
-coverage: venv
+coverage: venv $(_build_path)/CMakeCache.txt
 	$(ACTIVATE) cmake --build $(_build_path) --config Gcov
 	$(ACTIVATE) ctest --build-config Gcov --output-on-failure --test-dir $(_build_path)
 	$(ACTIVATE) cmake --build $(_build_path) --config Gcov --target process_coverage
+
+.PHONY: view-coverage
+view-coverage: ## View the coverage report
+	sensible-browser $(_build_path)/coverage/coverage.html
 
 # Help target
 .PHONY: help
