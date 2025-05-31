@@ -92,6 +92,8 @@ beman::optional::optional<Thing&> process() {
     return t;
 }
 
+beman::optional::optional<Thing&> processEmpty() { return beman::optional::nullopt; }
+
 TEST(OptionalRefTest, BaseDerivedCastConstruction) {
     base                                b;
     derived&                            dref(b); // ok
@@ -145,11 +147,74 @@ TEST(OptionalRefTest, Assignment) {
     o = process(); // well-formed
     EXPECT_TRUE(o);
 
+    o = processEmpty(); // well-formed
+    EXPECT_FALSE(o);
+
     beman::optional::optional<const int&> o2;
     EXPECT_FALSE(o2);
     o2 = [&]() { return i1; }();
 
     EXPECT_EQ(*o2, 7);
+}
+
+TEST(OptionalRefTest, NullOptAssignment) {
+    beman::optional::optional<int&> i1;
+    EXPECT_FALSE(i1);
+    int i = 5;
+    i1    = i;
+
+    EXPECT_TRUE(i1);
+    i1 = beman::optional::nullopt;
+    EXPECT_FALSE(i1);
+    i1 = i;
+    EXPECT_TRUE(i1);
+}
+
+TEST(OptionalRefTest, ConstRefAssignment) {
+    int                                   i = 7;
+    beman::optional::optional<int&>       i1{i};
+    const beman::optional::optional<int&> i2 = i1;
+
+    beman::optional::optional<const int&> c1;
+    c1 = i2;
+    EXPECT_TRUE(c1);
+    EXPECT_EQ(*c1, 7);
+
+    i = 5;
+    EXPECT_EQ(*c1, 5);
+    const beman::optional::optional<int&> empty(beman::optional::nullopt);
+    c1 = empty;
+    EXPECT_FALSE(c1);
+}
+
+TEST(OptionalRefTest, ConvertingConstRvalRef) {
+    int                                   i = 7;
+    beman::optional::optional<int&>       i1{i};
+    const beman::optional::optional<int&> i2 = i1;
+
+    beman::optional::optional<const int&> c1;
+    c1 = std::move(i2);
+    EXPECT_TRUE(c1);
+    EXPECT_EQ(*c1, 7);
+
+    i = 5;
+    EXPECT_EQ(*c1, 5);
+    const beman::optional::optional<int&> empty(beman::optional::nullopt);
+    c1 = std::move(empty);
+    EXPECT_FALSE(c1);
+}
+
+TEST(OptionalRefTest, NullOptConstruction) {
+    beman::optional::optional<int&> i1(beman::optional::nullopt);
+    EXPECT_FALSE(i1);
+    int i = 5;
+    i1    = i;
+
+    EXPECT_TRUE(i1);
+    i1 = beman::optional::nullopt;
+    EXPECT_FALSE(i1);
+    i1 = i;
+    EXPECT_TRUE(i1);
 }
 
 TEST(OptionalRefTest, RelationalOps) {
@@ -527,17 +592,21 @@ TEST(OptionalRefTest, Observers) {
     beman::optional::optional<int_box&>       ob1 = i1;
     beman::optional::optional<int_box&>       ob2;
     const beman::optional::optional<int_box&> ob3 = i1;
-    success                                       = std::is_same<decltype(ob1->i_), int>::value;
-    static_assert(std::is_same<decltype(ob1->i_), int>::value);
+
+    EXPECT_EQ(ob1->i_, 3);
+    EXPECT_EQ(ob3->i_, 3);
+
+    success = std::is_same_v<decltype(ob1->i_), int>;
+    static_assert(std::is_same_v<decltype(ob1->i_), int>);
     EXPECT_TRUE(success);
-    success = std::is_same<decltype(ob2->i_), int>::value;
-    static_assert(std::is_same<decltype(ob2->i_), int>::value);
+    success = std::is_same_v<decltype(ob2->i_), int>;
+    static_assert(std::is_same_v<decltype(ob2->i_), int>);
     EXPECT_TRUE(success);
-    success = std::is_same<decltype(ob3->i_), int>::value;
-    static_assert(std::is_same<decltype(ob3->i_), int>::value);
+    success = std::is_same_v<decltype(ob3->i_), int>;
+    static_assert(std::is_same_v<decltype(ob3->i_), int>);
     EXPECT_TRUE(success);
-    success = std::is_same<decltype(std::move(ob1)->i_), int>::value;
-    static_assert(std::is_same<decltype(std::move(ob1)->i_), int>::value);
+    success = std::is_same_v<decltype(std::move(ob1)->i_), int>;
+    static_assert(std::is_same_v<decltype(std::move(ob1)->i_), int>);
     EXPECT_TRUE(success);
 }
 

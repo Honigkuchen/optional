@@ -161,6 +161,14 @@ consteval bool testConstexprAssignmentValue() {
     o1      = s;
     retval &= (*o1 == 54);
 
+    beman::optional::optional<short> emptyShort;
+    o1 = emptyShort;
+    retval &= !o1.has_value();
+
+    o1 = o4;
+    o1 = std::move(emptyShort);
+    retval &= !o1.has_value();
+
     struct not_trivial_copy_assignable {
         int i_;
         constexpr not_trivial_copy_assignable(int i) : i_(i) {}

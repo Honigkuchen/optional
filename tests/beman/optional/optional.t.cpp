@@ -153,6 +153,53 @@ TEST(OptionalTest, OptionalOfOptional) {
     EXPECT_TRUE(oo2.value() == 43);
 }
 
+TEST(OptionalTest, EmplaceVariadic) {
+    struct for_emplace {
+        int a;
+        int b;
+        int c;
+    } f{4, 5, 6};
+
+    beman::optional::optional<for_emplace> o3;
+    o3.emplace(1, 2, 3);
+    EXPECT_TRUE(o3.has_value());
+
+    beman::optional::optional<for_emplace> engaged{f};
+    engaged.emplace(1, 2, 3);
+    EXPECT_TRUE(engaged.has_value());
+    EXPECT_EQ(engaged->a, 1);
+}
+
+TEST(OptionalTest, EmplaceInitializerList) {
+    struct for_emplace {
+        std::vector<int> v; // something to construct with list
+        std::string      name = "";
+        for_emplace(std::initializer_list<int> l) : v(l) {}
+        for_emplace(std::initializer_list<int> l, std::string n) : v(l), name(n) {}
+    } f{{1, 2, 3}};
+
+    beman::optional::optional<for_emplace> o3;
+    o3.emplace({1, 2, 3});
+    EXPECT_TRUE(o3.has_value());
+
+    beman::optional::optional<for_emplace> engaged{f};
+
+    auto e1 = engaged.emplace({1, 2, 3});
+
+    EXPECT_TRUE(engaged.has_value());
+    EXPECT_EQ(engaged->v[0], 1);
+    EXPECT_EQ(engaged->name, std::string(""));
+    EXPECT_EQ(engaged->v[0], e1.v[0]);
+    EXPECT_EQ(engaged->name, e1.name);
+
+    auto e2 = engaged.emplace({2, 3, 4}, "Name");
+    EXPECT_TRUE(engaged.has_value());
+    EXPECT_EQ(engaged->v[0], 2);
+    EXPECT_EQ(engaged->name, std::string("Name"));
+    EXPECT_EQ(engaged->v[0], e2.v[0]);
+    EXPECT_EQ(engaged->name, e2.name);
+}
+
 TEST(OptionalTest, AssignmentValue) {
     beman::optional::optional<int> o1 = 42;
     beman::optional::optional<int> o2 = 12;
@@ -191,6 +238,15 @@ TEST(OptionalTest, AssignmentValue) {
     short s = 54;
     o1      = s;
     EXPECT_TRUE(*o1 == 54);
+
+    beman::optional::optional<short> emptyShort;
+    o1 = emptyShort;
+    EXPECT_FALSE(o1);
+
+    o1 = o4;
+    EXPECT_TRUE(*o1 == 42);
+    o1 = std::move(emptyShort);
+    EXPECT_FALSE(o1);
 
     struct not_trivial_copy_assignable {
         int i_;
@@ -241,6 +297,58 @@ TEST(OptionalTest, AssignmentValue) {
     // Move from empty into engaged optional.
     o8 = std::move(o5);
     EXPECT_FALSE(o8);
+}
+
+TEST(OptionalTest, ConvertingAssignmentValue) {
+    beman::optional::optional<int> o1 = 42;
+    beman::optional::optional<int> o2;
+
+    short s = 9;
+    o1      = s;
+    o2      = s;
+    EXPECT_TRUE(o1);
+    EXPECT_TRUE(o2);
+}
+
+TEST(OptionalTest, ConvertingValueAssignment) {
+    struct base {};
+
+    struct convertible {
+        operator base() { return base{}; }
+    };
+
+    beman::optional::optional<base> empty;
+    beman::optional::optional<base> engaged(base{});
+
+    empty   = convertible{};
+    engaged = convertible{};
+    EXPECT_TRUE(empty);
+    EXPECT_TRUE(engaged);
+}
+
+TEST(OptionalTest, ValueObserver) {
+    beman::optional::optional<int> empty;
+    beman::optional::optional<int> bound{5};
+    EXPECT_TRUE(bound);
+    EXPECT_FALSE(empty);
+    EXPECT_EQ(*bound, 5);
+    EXPECT_EQ(bound.value(), 5);
+    EXPECT_EQ(std::as_const(bound).value(), 5);
+    EXPECT_EQ(std::move(bound).value(), 5);
+
+    EXPECT_THROW(
+        {
+            try {
+                empty.value();
+            } catch (const beman::optional::bad_optional_access& e) {
+                EXPECT_STREQ("Optional has no value", e.what());
+                throw;
+            }
+        },
+        beman::optional::bad_optional_access);
+
+    EXPECT_THROW({ std::as_const(empty).value(); }, beman::optional::bad_optional_access);
+    EXPECT_THROW({ std::move(empty).value(); }, beman::optional::bad_optional_access);
 }
 
 TEST(OptionalTest, Triviality) {
@@ -401,6 +509,16 @@ TEST(OptionalTest, MakeOptional) {
     EXPECT_TRUE(o5->v[1] == 1);
     EXPECT_TRUE(std::get<0>(o5->t) == 2);
     EXPECT_TRUE(std::get<1>(o5->t) == 3);
+
+    struct for_variadic {
+        int a;
+        int b;
+        int c;
+    };
+
+    auto o6 = beman::optional::make_optional<for_variadic>(0, 1, 3);
+    EXPECT_TRUE(o6);
+    EXPECT_EQ(o6->a, 0);
 }
 
 TEST(OptionalTest, Nullopt) {

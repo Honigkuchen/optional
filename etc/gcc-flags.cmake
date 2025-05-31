@@ -36,7 +36,7 @@ set(CMAKE_CXX_FLAGS_ASAN
 )
 
 set(CMAKE_CXX_FLAGS_GCOV
-    "-O0 -fno-inline -g --coverage -fprofile-abs-path"
+    "-O0 -fno-default-inline -fno-inline -g --coverage -fprofile-abs-path"
     CACHE STRING
     "C++ GCOV Flags"
     FORCE
