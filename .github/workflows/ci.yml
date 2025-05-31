@@ -33,6 +33,11 @@ jobs:
         with:
           submodules: 'true'
         # If Clang 17, install a newer version of libc++ and libc++abi.
+      - name: Update packages
+        run: |
+          set -x
+          sudo apt update
+          sudo apt -y upgrade
       - name: Install libc++
         if: matrix.config.tag == 'clang:17'
         run: |
