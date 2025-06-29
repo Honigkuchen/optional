@@ -4,8 +4,7 @@ set(CMAKE_C_COMPILER gcc)
 set(CMAKE_CXX_COMPILER g++)
 
 set(CMAKE_CXX_FLAGS
-    "-std=c++20 \
-   -Wall -Wextra "
+    "-Wall -Wextra "
     CACHE STRING
     "CXX_FLAGS"
     FORCE
