@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_CXX_FLAGS
     "-stdlib=libc++ -Wall -Wextra "
@@ -28,13 +28,13 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
     FORCE
 )
 set(CMAKE_CXX_FLAGS_TSAN
-    "-O3 -g -DNDEBUG -fsanitize=thread"
+    "-O3 -g -fsanitize=thread"
     CACHE STRING
     "C++ TSAN Flags"
     FORCE
 )
 set(CMAKE_CXX_FLAGS_ASAN
-    "-O3 -g -DNDEBUG -fsanitize=address,undefined,leak"
+    "-O3 -g -fsanitize=address,undefined,leak"
     CACHE STRING
     "C++ ASAN Flags"
     FORCE
