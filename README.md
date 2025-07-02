@@ -14,22 +14,6 @@ This repository implements `std::optional` extensions targeting C++26. The `bema
 
 **Status**: [Production ready. API may undergo changes.](https://github.com/bemanproject/beman/blob/main/docs/BEMAN_LIBRARY_MATURITY_MODEL.md#production-ready-api-may-undergo-changes)
 
-## License
-
-Source is licensed with the Apache 2.0 license with LLVM exceptions
-
-// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-
-Documentation and associated papers are licensed with the Creative Commons Attribution 4.0 International license.
-
-// SPDX-License-Identifier: CC-BY-4.0
-
-The intent is that the source and documentation are available for use by people implementing their own optional types as well as people using the optional presented here as-is.
-
-The README itself is licensed with CC0 1.0 Universal. Copy the contents and incorporate in your own work as you see fit.
-
-// SPDX-License-Identifier: CC0-1.0
-
 ## Examples
 
 Full runable examples can be found in `examples/` - please check [./examples/README.md](./examples/README.md).
@@ -54,7 +38,6 @@ for (const auto& i : opt) {
     std::cout << "\"for each loop\" over C++26 optional: opt = " << i << "\n";
 }
 ```
-
 Full code can be found in [./examples/range_loop.cpp](./examples/range_loop.cpp). Build and run instructions in
 [./examples/README.md](./examples/README.md). Or try it on Compiler Explorer: [range_loop.cpp@Compiler Explorer](https://godbolt.org/z/Gc6Y9j6zf).
 
@@ -82,6 +65,22 @@ beman::optional::optional<Cat&> cat = api();
 ```
 
 Full code can be found in [./examples/optional_ref.cpp](./examples/optional_ref.cpp). Build and run instructions in [./examples/README.md](./examples/README.md). Or try it on Compiler Explorer: [optional_ref.cpp@Compiler Explorer](https://godbolt.org/z/MxjdvTTov).
+
+## License
+
+Source is licensed with the Apache 2.0 license with LLVM exceptions
+
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+Documentation and associated papers are licensed with the Creative Commons Attribution 4.0 International license.
+
+// SPDX-License-Identifier: CC-BY-4.0
+
+The intent is that the source and documentation are available for use by people implementing their own optional types as well as people using the optional presented here as-is.
+
+The README itself is licensed with CC0 1.0 Universal. Copy the contents and incorporate in your own work as you see fit.
+
+// SPDX-License-Identifier: CC0-1.0
 
 ## How to Build
 
