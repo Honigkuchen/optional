@@ -28,3 +28,6 @@ compile_commands.json
 /.install/
 /.venv/
 /papers/P2988/_minted/
+
+/docs/html
+/docs/latex

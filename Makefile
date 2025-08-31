@@ -176,6 +176,10 @@ coverage: venv $(_build_path)/CMakeCache.txt
 view-coverage: ## View the coverage report
 	sensible-browser $(_build_path)/coverage/coverage.html
 
+.PHONY: docs
+docs: ## Build the docs with Doxygen
+	doxygen docs/Doxyfile
+
 # Help target
 .PHONY: help
 help: ## Show this help.
