@@ -10,7 +10,10 @@ SPDX-License-Identifier: 2.0 license with LLVM exceptions
 
 This repository implements `std::optional` extensions targeting C++26. The `beman.optional` library aims to evaluate the stability, the usability, and the performance of these proposed changes before they are officially adopted by WG21 into the C++ Working Draft. Additionally, it allows developers to use these new features before they are implemented in major standard library compilers.
 
-**Implements**: [Give *std::optional* Range Support (P3168)](https://wg21.link/P3168) and [`std::optional<T&>` (P2988)](https://wg21.link/P2988)
+**Implements**: [`std::optional<T&>` (P2988R12)](https://wg21.link/P2988R12) and
+[Give *std::optional* Range Support (P3168R2)](https://wg21.link/P3168R2).
+
+**Status**: [Production ready. API may undergo changes.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#production-ready-api-may-undergo-changes)
 
 ## License
 
