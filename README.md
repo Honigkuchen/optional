@@ -5,14 +5,19 @@ SPDX-License-Identifier: 2.0 license with LLVM exceptions
 -->
 
 <!-- markdownlint-disable -->
-<img src="https://github.com/bemanproject/beman/blob/main/images/logos/beman_logo-beman_library_production_ready_api_may_undergo_changes.png" style="width:5%; height:auto;"> ![CI Tests](https://github.com/bemanproject/optional/actions/workflows/ci.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/optional/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/optional?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg) [![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/Gc6Y9j6zf)
+![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_production_ready_api_may_undergo_changes.svg)![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg)[![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/Gc6Y9j6zf)
 <!-- markdownlint-enable -->
 
 This repository implements `std::optional` extensions targeting C++26. The `beman.optional` library aims to evaluate the stability, the usability, and the performance of these proposed changes before they are officially adopted by WG21 into the C++ Working Draft. Additionally, it allows developers to use these new features before they are implemented in major standard library compilers.
 
-**Implements**: [Give *std::optional* Range Support (P3168R2)](https://wg21.link/P3168R2) and [`std::optional<T&>` (P2988R5)](https://wg21.link/P2988R5)
+**Implements**: [`std::optional<T&>` (P2988R12)](https://wg21.link/P2988R12) and
+[Give *std::optional* Range Support (P3168R2)](https://wg21.link/P3168R2).
 
 **Status**: [Production ready. API may undergo changes.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#production-ready-api-may-undergo-changes)
+
+## License
+
+`beman.exemplar` is licensed under the Apache License v2.0 with LLVM Exceptions.
 
 ## Examples
 
