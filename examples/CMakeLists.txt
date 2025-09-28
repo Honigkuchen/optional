@@ -30,11 +30,8 @@ foreach(example ${EXAMPLES})
 
     # Install .
     install(
-        TARGETS
-            ${example}
-            COMPONENT
-            beman_optional_examples
-            DESTINATION
-            ${CMAKE_INSTALL_BINDIR}
+        TARGETS ${example}
+        COMPONENT beman_optional_examples
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 endforeach()
