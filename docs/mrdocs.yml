@@ -1,3 +1,6 @@
+# $schema: https://mrdocs.com/docs/mrdocs/develop/_attachments/mrdocs.schema.json
+# yaml-language-server: $schema=https://mrdocs.com/docs/mrdocs/develop/_attachments/mrdocs.schema.json
+
 ---
 source-root: ..
 input:
@@ -6,6 +9,8 @@ exclude:
   - ../include/beman/optional/detail
 exclude-patterns:
   - ../include/beman/optional/detail/**
+  - ../tests/**
+  - ../examples/**
 includes:
   - ../include
 file-patterns:
@@ -16,3 +21,4 @@ implementation-defined:
   - 'beman::optional::detail'
 multipage: true
 generator: adoc
+output: adoc

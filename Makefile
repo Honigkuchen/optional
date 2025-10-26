@@ -57,8 +57,16 @@ $(_build_path)/CMakeCache.txt: | $(_build_path) .gitmodules
 	-rm compile_commands.json
 	ln -s $(_build_path)/compile_commands.json
 
+$(_build_path)/compile_commands.json : $(_build_path)/CMakeCache.txt
+
+compile_commands.json: $(_build_path)/compile_commands.json
+	-rm compile_commands.json
+	ln -s $(_build_path)/compile_commands.json
+
 TARGET:=all
+compile: compile_commands.json
 compile: $(_build_path)/CMakeCache.txt ## Compile the project
+compile:  ## Compile the project
 	cmake --build $(_build_path)  --config $(CONFIG) --target all -- -k 0
 
 compile-headers: $(_build_path)/CMakeCache.txt ## Compile the headers
@@ -177,6 +185,12 @@ view-coverage: ## View the coverage report
 .PHONY: docs
 docs: ## Build the docs with Doxygen
 	doxygen docs/Doxyfile
+
+.PHONY: mrdocs
+mrdocs: ## Build the docs with Doxygen
+	-rm -rf docs/adoc
+	cd docs && NO_COLOR=1 mrdocs mrdocs.yml 2>&1 | sed 's/\x1b\[[0-9;]*m//g'
+	find docs/adoc -name '*.adoc' | xargs asciidoctor
 
 # Help target
 .PHONY: help
