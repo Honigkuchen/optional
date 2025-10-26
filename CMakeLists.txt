@@ -37,8 +37,8 @@ if(OPTIONAL_ENABLE_TESTING)
             beman_optional_test
             PRIVATE
                 FILE_SET beman_optional_test_headers
-                TYPE HEADERS
-                BASE_DIRS tests
+                    TYPE HEADERS
+                    BASE_DIRS tests
         )
         # Tests
         add_subdirectory(tests/beman/optional)
