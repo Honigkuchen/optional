@@ -143,7 +143,7 @@ requirements-dev.txt: requirements-dev.in
 
 $(VENV):
 	$(PYEXECPATH) -m venv $(VENV)
-	$(PIP) install --upgrade pip setuptools wheel
+	$(PIP) install pip setuptools wheel
 	$(PIP) install pip-tools
 
 $(VENV)/$(MARKER): requirements.txt requirements-dev.txt | $(VENV)
