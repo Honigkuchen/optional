@@ -34,7 +34,7 @@ else
 endif
 
 
-_build_path?=$(_build_dir)/$(_build_name)
+_build_path?=$(shell realpath --relative-to=$(CURDIR) $(_build_dir)/$(_build_name))
 
 define run_cmake =
 	cmake \
@@ -54,18 +54,18 @@ $(_build_path):
 
 $(_build_path)/CMakeCache.txt: | $(_build_path) .gitmodules
 	cd $(_build_path) && $(run_cmake)
-	-rm compile_commands.json
-	ln -s $(_build_path)/compile_commands.json
 
 $(_build_path)/compile_commands.json : $(_build_path)/CMakeCache.txt
 
-compile_commands.json: $(_build_path)/compile_commands.json
-	-rm compile_commands.json
-	ln -s $(_build_path)/compile_commands.json
+.PHONY: compile_commands.json
+compile_commands.json:
+	if [ "$(shell readlink compile_commands.json)" != "$(_build_path)/compile_commands.json" ] ; then \
+		ln -sf $(_build_path)/compile_commands.json ; \
+	fi
 
 TARGET:=all
+compile: $(_build_path)/CMakeCache.txt
 compile: compile_commands.json
-compile: $(_build_path)/CMakeCache.txt ## Compile the project
 compile:  ## Compile the project
 	cmake --build $(_build_path)  --config $(CONFIG) --target all -- -k 0
 
