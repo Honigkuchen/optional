@@ -34,7 +34,9 @@ else
 endif
 
 
-_build_path?=$(shell realpath --relative-to=$(CURDIR) $(_build_dir)/$(_build_name))
+_build_path?=$(_build_dir)/$(_build_name)
+_build_path:=$(subst //,/,$(_build_path))
+_build_path:=$(patsubst %/,%,$(_build_path))
 
 define run_cmake =
 	cmake \
