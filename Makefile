@@ -44,6 +44,7 @@ define run_cmake =
 	-DCMAKE_CONFIGURATION_TYPES=$(_configuration_types) \
 	-DCMAKE_INSTALL_PREFIX=$(abspath $(INSTALL_PREFIX)) \
 	-DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
+	-DCMAKE_PREFIX_PATH=$(CURDIR)/infra/cmake \
 	-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="./cmake/use-fetch-content.cmake" \
 	$(_cmake_args) \
 	$(CURDIR)
@@ -75,7 +76,7 @@ compile-headers: $(_build_path)/CMakeCache.txt ## Compile the headers
 	 cmake --build $(_build_path)  --config $(CONFIG) --target all_verify_interface_header_sets -- -k 0
 
 install: $(_build_path)/CMakeCache.txt compile ## Install the project
-	cmake --install $(_build_path) --config $(CONFIG) --component beman_optional_development --verbose
+	cmake --install $(_build_path) --config $(CONFIG) --component beman.optional --verbose
 
 ctest: $(_build_path)/CMakeCache.txt ## Run CTest on current build
 	cd $(_build_path) && ctest --output-on-failure -C $(CONFIG)

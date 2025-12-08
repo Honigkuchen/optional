@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.27)
 
-project(beman_optional VERSION 0.0.0 LANGUAGES CXX)
+project(beman.optional VERSION 0.0.0 LANGUAGES CXX)
 
 # Includes
 include(CTest)
@@ -20,21 +20,21 @@ option(
 
 set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
 
-# Create the library target and named header set for beman_optional
-add_library(beman_optional INTERFACE)
+# Create the library target and named header set for beman.optional
+add_library(beman.optional INTERFACE)
 target_sources(
-    beman_optional
-    PUBLIC FILE_SET beman_optional_headers TYPE HEADERS BASE_DIRS include
+    beman.optional
+    PUBLIC FILE_SET HEADERS TYPE HEADERS BASE_DIRS include
 )
 
 if(OPTIONAL_ENABLE_TESTING)
     find_package(GTest QUIET)
     if(GTest_FOUND)
-        # Create the library target and named header set for testing beman_optional
+        # Create the library target and named header set for testing beman.optional
         # and mark the set private
-        add_executable(beman_optional_test)
+        add_executable(beman.optional.test)
         target_sources(
-            beman_optional_test
+            beman.optional.test
             PRIVATE
                 FILE_SET beman_optional_test_headers
                     TYPE HEADERS
@@ -57,24 +57,27 @@ add_subdirectory(include/beman/optional)
 
 add_subdirectory(examples)
 
-include(CMakePackageConfigHelpers)
+find_package(beman-install-library REQUIRED)
+beman_install_library(beman.optional)
 
-# This will be used to replace @PACKAGE_cmakeModulesDir@
-set(cmakeModulesDir cmake/beman)
-configure_package_config_file(
-    cmake/Config.cmake.in
-    BemanOptionalConfig.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
-    PATH_VARS cmakeModulesDir
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
+# include(CMakePackageConfigHelpers)
 
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/BemanOptionalConfig.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
-    COMPONENT beman_optional_development
-)
+# # This will be used to replace @PACKAGE_cmakeModulesDir@
+# set(cmakeModulesDir cmake/beman)
+# configure_package_config_file(
+#     cmake/Config.cmake.in
+#     BemanOptionalConfig.cmake
+#     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
+#     PATH_VARS cmakeModulesDir
+#     NO_SET_AND_CHECK_MACRO
+#     NO_CHECK_REQUIRED_COMPONENTS_MACRO
+# )
+
+# install(
+#     FILES ${CMAKE_CURRENT_BINARY_DIR}/BemanOptionalConfig.cmake
+#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
+#     COMPONENT beman.optional_development
+# )
 
 # Coverage
 configure_file("cmake/gcovr.cfg.in" gcovr.cfg @ONLY)
