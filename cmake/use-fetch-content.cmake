@@ -13,8 +13,7 @@ message(TRACE "BemanOptional_projectDir=\"${BemanOptional_projectDir}\"")
 
 message(TRACE "BEMAN_OPTIONAL_LOCKFILE=\"${BEMAN_OPTIONAL_LOCKFILE}\"")
 file(
-    REAL_PATH
-    "${BEMAN_OPTIONAL_LOCKFILE}"
+    REAL_PATH "${BEMAN_OPTIONAL_LOCKFILE}"
     BemanOptional_lockfile
     BASE_DIRECTORY "${BemanOptional_projectDir}"
     EXPAND_TILDE
@@ -36,8 +35,7 @@ function(BemanOptional_provideDependency method package_name)
 
     # Get the "dependencies" field and store it in BemanOptional_dependenciesObj
     string(
-        JSON
-        BemanOptional_dependenciesObj
+        JSON BemanOptional_dependenciesObj
         ERROR_VARIABLE BemanOptional_error
         GET "${BemanOptional_rootObj}"
         "dependencies"
@@ -48,8 +46,7 @@ function(BemanOptional_provideDependency method package_name)
 
     # Get the length of the libraries array and store it in BemanOptional_dependenciesObj
     string(
-        JSON
-        BemanOptional_numDependencies
+        JSON BemanOptional_numDependencies
         ERROR_VARIABLE BemanOptional_error
         LENGTH "${BemanOptional_dependenciesObj}"
     )
@@ -67,8 +64,7 @@ function(BemanOptional_provideDependency method package_name)
         # Get the dependency object at BemanOptional_index
         # and store it in BemanOptional_depObj
         string(
-            JSON
-            BemanOptional_depObj
+            JSON BemanOptional_depObj
             ERROR_VARIABLE BemanOptional_error
             GET "${BemanOptional_dependenciesObj}"
             "${BemanOptional_index}"
@@ -82,8 +78,7 @@ function(BemanOptional_provideDependency method package_name)
 
         # Get the "name" field and store it in BemanOptional_name
         string(
-            JSON
-            BemanOptional_name
+            JSON BemanOptional_name
             ERROR_VARIABLE BemanOptional_error
             GET "${BemanOptional_depObj}"
             "name"
@@ -97,8 +92,7 @@ function(BemanOptional_provideDependency method package_name)
 
         # Get the "package_name" field and store it in BemanOptional_pkgName
         string(
-            JSON
-            BemanOptional_pkgName
+            JSON BemanOptional_pkgName
             ERROR_VARIABLE BemanOptional_error
             GET "${BemanOptional_depObj}"
             "package_name"
@@ -112,8 +106,7 @@ function(BemanOptional_provideDependency method package_name)
 
         # Get the "git_repository" field and store it in BemanOptional_repo
         string(
-            JSON
-            BemanOptional_repo
+            JSON BemanOptional_repo
             ERROR_VARIABLE BemanOptional_error
             GET "${BemanOptional_depObj}"
             "git_repository"
@@ -127,8 +120,7 @@ function(BemanOptional_provideDependency method package_name)
 
         # Get the "git_tag" field and store it in BemanOptional_tag
         string(
-            JSON
-            BemanOptional_tag
+            JSON BemanOptional_tag
             ERROR_VARIABLE BemanOptional_error
             GET "${BemanOptional_depObj}"
             "git_tag"
@@ -143,8 +135,7 @@ function(BemanOptional_provideDependency method package_name)
         if(method STREQUAL "FIND_PACKAGE")
             if(package_name STREQUAL BemanOptional_pkgName)
                 string(
-                    APPEND
-                    BemanOptional_debug
+                    APPEND BemanOptional_debug
                     "Redirecting find_package calls for ${BemanOptional_pkgName} "
                     "to FetchContent logic fetching ${BemanOptional_repo} at "
                     "${BemanOptional_tag} according to ${BemanOptional_lockfile}."
