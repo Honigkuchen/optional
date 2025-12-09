@@ -1,5 +1,4 @@
 # CMakeLists.txt                                                    -*-CMake-*-
-#
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 cmake_minimum_required(VERSION 3.27)
@@ -24,7 +23,7 @@ set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
 add_library(beman.optional INTERFACE)
 target_sources(
     beman.optional
-    PUBLIC FILE_SET HEADERS TYPE HEADERS BASE_DIRS include
+    PUBLIC FILE_SET beman_optional_headers TYPE HEADERS BASE_DIRS include
 )
 
 if(OPTIONAL_ENABLE_TESTING)
@@ -42,6 +41,8 @@ if(OPTIONAL_ENABLE_TESTING)
         )
         # Tests
         add_subdirectory(tests/beman/optional)
+        include(GoogleTest)
+        gtest_discover_tests(beman.optional.test)
     else()
         message(
             WARNING
@@ -58,26 +59,7 @@ add_subdirectory(include/beman/optional)
 add_subdirectory(examples)
 
 find_package(beman-install-library REQUIRED)
-beman_install_library(beman.optional)
-
-# include(CMakePackageConfigHelpers)
-
-# # This will be used to replace @PACKAGE_cmakeModulesDir@
-# set(cmakeModulesDir cmake/beman)
-# configure_package_config_file(
-#     cmake/Config.cmake.in
-#     BemanOptionalConfig.cmake
-#     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
-#     PATH_VARS cmakeModulesDir
-#     NO_SET_AND_CHECK_MACRO
-#     NO_CHECK_REQUIRED_COMPONENTS_MACRO
-# )
-
-# install(
-#     FILES ${CMAKE_CURRENT_BINARY_DIR}/BemanOptionalConfig.cmake
-#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
-#     COMPONENT beman.optional_development
-# )
+beman_install_library(beman.optional FILE_SET beman_optional_headers)
 
 # Coverage
 configure_file("cmake/gcovr.cfg.in" gcovr.cfg @ONLY)

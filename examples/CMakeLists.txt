@@ -1,9 +1,7 @@
-# cmake-format: off
-# examples/CMakeLists.txt -*-makefile-*-
+# examples/CMakeLists.txt                                           -*-cmake-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-# cmake-format: on
 
-set(BEMAN_OPTIONAL_LIBRARY "beman_optional")
+set(BEMAN_OPTIONAL_LIBRARY "beman.optional")
 
 include(GNUInstallDirs)
 
@@ -31,7 +29,7 @@ foreach(example ${EXAMPLES})
     # Install .
     install(
         TARGETS ${example}
-        COMPONENT beman_optional_examples
+        COMPONENT beman.optional_examples
         DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 endforeach()
