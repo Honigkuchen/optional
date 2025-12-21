@@ -78,6 +78,12 @@ compile-headers: $(_build_path)/CMakeCache.txt ## Compile the headers
 install: $(_build_path)/CMakeCache.txt compile ## Install the project
 	cmake --install $(_build_path) --config $(CONFIG) --component beman.optional --verbose
 
+.PHONY: clean-install
+clean-install:
+	-rm -rf .install
+
+realclean: clean-install
+
 ctest: $(_build_path)/CMakeCache.txt ## Run CTest on current build
 	cd $(_build_path) && ctest --output-on-failure -C $(CONFIG)
 
@@ -194,6 +200,18 @@ mrdocs: ## Build the docs with Doxygen
 	-rm -rf docs/adoc
 	cd docs && NO_COLOR=1 mrdocs mrdocs.yml 2>&1 | sed 's/\x1b\[[0-9;]*m//g'
 	find docs/adoc -name '*.adoc' | xargs asciidoctor
+
+.PHONY: testinstall
+testinstall: install
+testinstall: ## Test the installed package
+	cmake -S installtest -B installtest/.build
+	cmake --build  installtest/.build --target test
+
+.PHONY: clean-testinstall
+clean-testinstall:
+	-rm -rf installtest/.build
+
+realclean: clean-testinstall
 
 # Help target
 .PHONY: help
