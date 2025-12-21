@@ -8,7 +8,12 @@ enable_testing()
 
 # Find the installed package
 set(OPTIONAL_INSTALL_DIR "../.install/lib/cmake/beman.optional")
-find_package(beman.optional REQUIRED PATHS ${OPTIONAL_INSTALL_DIR} NO_DEFAULT_PATH)
+find_package(
+    beman.optional
+    REQUIRED
+    PATHS ${OPTIONAL_INSTALL_DIR}
+    NO_DEFAULT_PATH
+)
 
 # Add your test executable
 add_executable(TestInstalledOptional test.cpp)
