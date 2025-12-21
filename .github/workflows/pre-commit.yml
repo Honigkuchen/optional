@@ -56,7 +56,7 @@ jobs:
         # we only lint on the changed file in PR.
       - name: Get Changed Files
         id: changed-files
-        uses: tj-actions/changed-files@v45
+        uses: tj-actions/changed-files@v47
 
         # See:
         # https://github.com/tj-actions/changed-files?tab=readme-ov-file#using-local-git-directory-
