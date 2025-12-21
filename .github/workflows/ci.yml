@@ -29,7 +29,7 @@ jobs:
           - {name: "Ubuntu GCC 13", tag: "gcc:13", toolchain: "gcc-13",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
           - {name: "Ubuntu GCC 12", tag: "gcc:12", toolchain: "gcc-12",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           submodules: 'true'
         # If Clang 17, install a newer version of libc++ and libc++abi.
@@ -113,7 +113,7 @@ jobs:
     if: failure() && github.event_name == 'schedule'
     steps:
       # See https://github.com/cli/cli/issues/5075
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Create issue
         run: |
           issue_num=$(gh issue list -s open -S "[SCHEDULED-BUILD] Build & Test failure" -L 1 --json number | jq 'if length == 0 then -1 else .[0].number end')
