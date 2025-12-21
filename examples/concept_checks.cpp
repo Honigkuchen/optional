@@ -3,7 +3,7 @@
 
 #include <optional>
 #include <beman/optional/optional.hpp>
-
+#include <version>
 #include <concepts>
 
 namespace test {
@@ -38,10 +38,10 @@ struct derived : public base {
 
 } // namespace test
 
-const auto test_concepts_disabled = [](auto&& opt) {
+const auto test_concepts_disabled = []([[maybe_unused]] auto&& opt) {
+#ifndef __cpp_lib_optional_range_support
     // The optional type is the opt type without the reference.
     using optional = std::remove_reference_t<decltype(opt)>;
-
     // Check std::ranges concepts not enabled.
     static_assert(!std::ranges::range<optional>);
     static_assert(!std::ranges::view<optional>);
@@ -53,6 +53,7 @@ const auto test_concepts_disabled = [](auto&& opt) {
     static_assert(!std::ranges::viewable_range<optional>);
     static_assert(!std::ranges::random_access_range<optional>);
     static_assert(!std::ranges::sized_range<optional>);
+#endif
 };
 
 const auto test_concepts_enabled = [](auto&& opt) {

@@ -1101,7 +1101,14 @@ inline constexpr const T& optional<T>::value() const& {
 }
 template <class T>
 inline constexpr T&& optional<T>::value() && {
+#if defined(_MSC_VER) // MSVC BUG -- ternary creates temporary
+    if (has_value()) {
+        return std::move(value_);
+    }
+    throw bad_optional_access();
+#else
     return has_value() ? std::move(value_) : throw bad_optional_access();
+#endif
 }
 
 /// Returns the contained value if there is one, otherwise returns `u`
@@ -1431,10 +1438,10 @@ constexpr std::compare_three_way_result_t<T, U> operator<=>(const optional<T>& x
 // 22.5.9 Specialized algorithms[optional.specalg]
 
 template <class T>
-constexpr void swap(optional<T>& lhs, optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
+constexpr void swap(optional<T>& x, optional<T>& y) noexcept(noexcept(x.swap(y)))
     requires std::is_move_constructible_v<T> && std::is_swappable_v<T>
 {
-    return lhs.swap(rhs);
+    return x.swap(y);
 }
 
 template <int, class T>

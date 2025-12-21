@@ -8,6 +8,7 @@
 #include <concepts>
 #include <iostream>
 #include <ranges>
+#include <vector>
 
 int main() {
     // Example from P3168R2: generate an infinite sequence of Pythagorean triples.

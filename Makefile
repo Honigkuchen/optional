@@ -35,6 +35,8 @@ endif
 
 
 _build_path?=$(_build_dir)/$(_build_name)
+_build_path:=$(subst //,/,$(_build_path))
+_build_path:=$(patsubst %/,%,$(_build_path))
 
 define run_cmake =
 	cmake \
@@ -42,6 +44,7 @@ define run_cmake =
 	-DCMAKE_CONFIGURATION_TYPES=$(_configuration_types) \
 	-DCMAKE_INSTALL_PREFIX=$(abspath $(INSTALL_PREFIX)) \
 	-DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
+	-DCMAKE_PREFIX_PATH=$(CURDIR)/infra/cmake \
 	-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="./cmake/use-fetch-content.cmake" \
 	$(_cmake_args) \
 	$(CURDIR)
@@ -54,18 +57,18 @@ $(_build_path):
 
 $(_build_path)/CMakeCache.txt: | $(_build_path) .gitmodules
 	cd $(_build_path) && $(run_cmake)
-	-rm compile_commands.json
-	ln -s $(_build_path)/compile_commands.json
 
 $(_build_path)/compile_commands.json : $(_build_path)/CMakeCache.txt
 
-compile_commands.json: $(_build_path)/compile_commands.json
-	-rm compile_commands.json
-	ln -s $(_build_path)/compile_commands.json
+.PHONY: compile_commands.json
+compile_commands.json:
+	if [ "$(shell readlink compile_commands.json)" != "$(_build_path)/compile_commands.json" ] ; then \
+		ln -sf $(_build_path)/compile_commands.json ; \
+	fi
 
 TARGET:=all
+compile: $(_build_path)/CMakeCache.txt
 compile: compile_commands.json
-compile: $(_build_path)/CMakeCache.txt ## Compile the project
 compile:  ## Compile the project
 	cmake --build $(_build_path)  --config $(CONFIG) --target all -- -k 0
 
@@ -73,7 +76,7 @@ compile-headers: $(_build_path)/CMakeCache.txt ## Compile the headers
 	 cmake --build $(_build_path)  --config $(CONFIG) --target all_verify_interface_header_sets -- -k 0
 
 install: $(_build_path)/CMakeCache.txt compile ## Install the project
-	cmake --install $(_build_path) --config $(CONFIG) --component beman_optional_development --verbose
+	cmake --install $(_build_path) --config $(CONFIG) --component beman.optional --verbose
 
 ctest: $(_build_path)/CMakeCache.txt ## Run CTest on current build
 	cd $(_build_path) && ctest --output-on-failure -C $(CONFIG)

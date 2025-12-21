@@ -1,175 +1,188 @@
 {
   "version": 6,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 29,
-    "patch": 2
-  },
   "configurePresets": [
     {
-      "name": "common",
-      "description": "General settings that apply to all configurations",
+      "name": "_root-config",
       "hidden": true,
-      "generator": "Ninja Multi-Config",
-      "binaryDir": "${sourceDir}/.build/${presetName}",
-      "installDir": "${sourceDir}/.install/${presetName}",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Tsan;Asan"
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "./infra/cmake/use-fetch-content.cmake"
       }
     },
     {
-      "name": "system",
-      "inherits": "common",
-      "displayName": "System compiler",
-      "description": "Build with default cc and c++ compilers",
-      "toolchainFile": "${sourceDir}/etc/toolchain.cmake"
+      "name": "_debug-base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BEMAN_BUILDSYS_SANITIZER": "MaxSan"
+      }
     },
     {
-      "name": "gcc-14",
-      "inherits": "common",
-      "displayName": "GCC 14",
-      "description": "Build with GCC 14 compilers",
-      "toolchainFile": "${sourceDir}/etc/gcc-14-toolchain.cmake"
+      "name": "_release-base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
     },
     {
-      "name": "gcc-13",
-      "inherits": "common",
-      "displayName": "GCC 13",
-      "description": "Build with GCC 13 compilers",
-      "toolchainFile": "${sourceDir}/etc/gcc-13-toolchain.cmake"
+      "name": "gcc-debug",
+      "displayName": "GCC Debug Build",
+      "inherits": [
+        "_root-config",
+        "_debug-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/gnu-toolchain.cmake"
+      }
     },
     {
-      "name": "gcc-12",
-      "inherits": "common",
-      "displayName": "GCC 12",
-      "description": "Build with GCC 12 compilers",
-      "toolchainFile": "${sourceDir}/etc/gcc-12-toolchain.cmake"
+      "name": "gcc-release",
+      "displayName": "GCC Release Build",
+      "inherits": [
+        "_root-config",
+        "_release-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/gnu-toolchain.cmake"
+      }
     },
     {
-      "name": "clang-20",
-      "inherits": "common",
-      "displayName": "Clang 20",
-      "description": "Build with Clang 20 compilers",
-      "toolchainFile": "${sourceDir}/etc/clang-20-toolchain.cmake"
+      "name": "llvm-debug",
+      "displayName": "Clang Debug Build",
+      "inherits": [
+        "_root-config",
+        "_debug-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-toolchain.cmake"
+      }
     },
     {
-      "name": "clang-19",
-      "inherits": "common",
-      "displayName": "Clang 19",
-      "description": "Build with Clang 19 compilers",
-      "toolchainFile": "${sourceDir}/etc/clang-19-toolchain.cmake"
+      "name": "llvm-release",
+      "displayName": "Clang Release Build",
+      "inherits": [
+        "_root-config",
+        "_release-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-toolchain.cmake"
+      }
     },
     {
-      "name": "clang-18",
-      "inherits": "common",
-      "displayName": "Clang 18",
-      "description": "Build with Clang 18 compilers",
-      "toolchainFile": "${sourceDir}/etc/clang-18-toolchain.cmake"
+      "name": "appleclang-debug",
+      "displayName": "Appleclang Debug Build",
+      "inherits": [
+        "_root-config",
+        "_debug-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/appleclang-toolchain.cmake"
+      }
     },
     {
-      "name": "clang-17",
-      "inherits": "common",
-      "displayName": "Clang 17",
-      "description": "Build with Clang 17 compilers",
-      "toolchainFile": "${sourceDir}/etc/clang-17-toolchain.cmake"
+      "name": "appleclang-release",
+      "displayName": "Appleclang Release Build",
+      "inherits": [
+        "_root-config",
+        "_release-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/appleclang-toolchain.cmake"
+      }
     },
     {
-      "name": "clang-16",
-      "inherits": "common",
-      "displayName": "Clang 16",
-      "description": "Build with Clang 16 compilers",
-      "toolchainFile": "${sourceDir}/etc/clang-16-toolchain.cmake"
+      "name": "msvc-debug",
+      "displayName": "MSVC Debug Build",
+      "inherits": [
+        "_root-config",
+        "_debug-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/msvc-toolchain.cmake"
+      }
+    },
+    {
+      "name": "msvc-release",
+      "displayName": "MSVC Release Build",
+      "inherits": [
+        "_root-config",
+        "_release-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "infra/cmake/msvc-toolchain.cmake"
+      }
     }
   ],
   "buildPresets": [
     {
-      "name": "common",
+      "name": "_root-build",
       "hidden": true,
-      "configuration": "Asan",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "jobs": 0
+    },
+    {
+      "name": "gcc-debug",
+      "configurePreset": "gcc-debug",
+      "inherits": [
+        "_root-build"
       ]
     },
     {
-      "name": "system",
-      "inherits": "common",
-      "configurePreset": "system",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "name": "gcc-release",
+      "configurePreset": "gcc-release",
+      "inherits": [
+        "_root-build"
       ]
     },
     {
-      "name": "gcc-14",
-      "inherits": "common",
-      "configurePreset": "gcc-14",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "name": "llvm-debug",
+      "configurePreset": "llvm-debug",
+      "inherits": [
+        "_root-build"
       ]
     },
     {
-      "name": "gcc-13",
-      "inherits": "common",
-      "configurePreset": "gcc-13",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "name": "llvm-release",
+      "configurePreset": "llvm-release",
+      "inherits": [
+        "_root-build"
       ]
     },
     {
-      "name": "gcc-12",
-      "inherits": "common",
-      "configurePreset": "gcc-12"
-    },
-    {
-      "name": "clang-20",
-      "inherits": "common",
-      "configurePreset": "clang-20"
-    },
-    {
-      "name": "clang-19",
-      "inherits": "common",
-      "configurePreset": "clang-19",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "name": "appleclang-debug",
+      "configurePreset": "appleclang-debug",
+      "inherits": [
+        "_root-build"
       ]
     },
     {
-      "name": "clang-18",
-      "inherits": "common",
-      "configurePreset": "clang-18",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "name": "appleclang-release",
+      "configurePreset": "appleclang-release",
+      "inherits": [
+        "_root-build"
       ]
     },
     {
-      "name": "clang-17",
-      "inherits": "common",
-      "configurePreset": "clang-17",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "name": "msvc-debug",
+      "configurePreset": "msvc-debug",
+      "inherits": [
+        "_root-build"
       ]
     },
     {
-      "name": "clang-16",
-      "inherits": "common",
-      "configurePreset": "clang-16",
-      "targets": [
-        "all_verify_interface_header_sets",
-        "all"
+      "name": "msvc-release",
+      "configurePreset": "msvc-release",
+      "inherits": [
+        "_root-build"
       ]
     }
   ],
   "testPresets": [
     {
-      "name": "common",
+      "name": "_test_base",
       "hidden": true,
-      "configuration": "Asan",
       "output": {
         "outputOnFailure": true
       },
@@ -179,202 +192,180 @@
       }
     },
     {
-      "name": "system",
-      "inherits": "common",
-      "configurePreset": "system"
+      "name": "gcc-debug",
+      "inherits": "_test_base",
+      "configurePreset": "gcc-debug"
     },
     {
-      "name": "gcc-14",
-      "inherits": "common",
-      "configurePreset": "gcc-14"
+      "name": "gcc-release",
+      "inherits": "_test_base",
+      "configurePreset": "gcc-release"
     },
     {
-      "name": "gcc-13",
-      "inherits": "common",
-      "configurePreset": "gcc-13"
+      "name": "llvm-debug",
+      "inherits": "_test_base",
+      "configurePreset": "llvm-debug"
     },
     {
-      "name": "gcc-12",
-      "inherits": "common",
-      "configurePreset": "gcc-12"
+      "name": "llvm-release",
+      "inherits": "_test_base",
+      "configurePreset": "llvm-release"
     },
     {
-      "name": "clang-20",
-      "inherits": "common",
-      "configurePreset": "clang-20"
+      "name": "appleclang-debug",
+      "inherits": "_test_base",
+      "configurePreset": "appleclang-debug"
     },
     {
-      "name": "clang-19",
-      "inherits": "common",
-      "configurePreset": "clang-19"
+      "name": "appleclang-release",
+      "inherits": "_test_base",
+      "configurePreset": "appleclang-release"
     },
     {
-      "name": "clang-18",
-      "inherits": "common",
-      "configurePreset": "clang-18"
+      "name": "msvc-debug",
+      "inherits": "_test_base",
+      "configurePreset": "msvc-debug"
     },
     {
-      "name": "clang-17",
-      "inherits": "common",
-      "configurePreset": "clang-17"
-    },
-    {
-      "name": "clang-16",
-      "inherits": "common",
-      "configurePreset": "clang-16"
+      "name": "msvc-release",
+      "inherits": "_test_base",
+      "configurePreset": "msvc-release"
     }
   ],
   "workflowPresets": [
     {
-      "name": "system",
+      "name": "gcc-debug",
       "steps": [
         {
           "type": "configure",
-          "name": "system"
+          "name": "gcc-debug"
         },
         {
           "type": "build",
-          "name": "system"
+          "name": "gcc-debug"
         },
         {
           "type": "test",
-          "name": "system"
+          "name": "gcc-debug"
         }
       ]
     },
     {
-      "name": "gcc-14",
+      "name": "gcc-release",
       "steps": [
         {
           "type": "configure",
-          "name": "gcc-14"
+          "name": "gcc-release"
         },
         {
           "type": "build",
-          "name": "gcc-14"
+          "name": "gcc-release"
         },
         {
           "type": "test",
-          "name": "gcc-14"
+          "name": "gcc-release"
         }
       ]
     },
     {
-      "name": "gcc-13",
+      "name": "llvm-debug",
       "steps": [
         {
           "type": "configure",
-          "name": "gcc-13"
+          "name": "llvm-debug"
         },
         {
           "type": "build",
-          "name": "gcc-13"
+          "name": "llvm-debug"
         },
         {
           "type": "test",
-          "name": "gcc-13"
+          "name": "llvm-debug"
         }
       ]
     },
     {
-      "name": "gcc-12",
+      "name": "llvm-release",
       "steps": [
         {
           "type": "configure",
-          "name": "gcc-12"
+          "name": "llvm-release"
         },
         {
           "type": "build",
-          "name": "gcc-12"
+          "name": "llvm-release"
         },
         {
           "type": "test",
-          "name": "gcc-12"
+          "name": "llvm-release"
         }
       ]
     },
     {
-      "name": "clang-20",
+      "name": "appleclang-debug",
       "steps": [
         {
           "type": "configure",
-          "name": "clang-20"
+          "name": "appleclang-debug"
         },
         {
           "type": "build",
-          "name": "clang-20"
+          "name": "appleclang-debug"
         },
         {
           "type": "test",
-          "name": "clang-20"
+          "name": "appleclang-debug"
         }
       ]
     },
     {
-      "name": "clang-19",
+      "name": "appleclang-release",
       "steps": [
         {
           "type": "configure",
-          "name": "clang-19"
+          "name": "appleclang-release"
         },
         {
           "type": "build",
-          "name": "clang-19"
+          "name": "appleclang-release"
         },
         {
           "type": "test",
-          "name": "clang-19"
+          "name": "appleclang-release"
         }
       ]
     },
     {
-      "name": "clang-18",
+      "name": "msvc-debug",
       "steps": [
         {
           "type": "configure",
-          "name": "clang-18"
+          "name": "msvc-debug"
         },
         {
           "type": "build",
-          "name": "clang-18"
+          "name": "msvc-debug"
         },
         {
           "type": "test",
-          "name": "clang-18"
+          "name": "msvc-debug"
         }
       ]
     },
     {
-      "name": "clang-17",
+      "name": "msvc-release",
       "steps": [
         {
           "type": "configure",
-          "name": "clang-17"
+          "name": "msvc-release"
         },
         {
           "type": "build",
-          "name": "clang-17"
+          "name": "msvc-release"
         },
         {
           "type": "test",
-          "name": "clang-17"
-        }
-      ]
-    },
-    {
-      "name": "clang-16",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "clang-16"
-        },
-        {
-          "type": "build",
-          "name": "clang-16"
-        },
-        {
-          "type": "test",
-          "name": "clang-16"
+          "name": "msvc-release"
         }
       ]
     }
