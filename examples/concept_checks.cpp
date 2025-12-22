@@ -1,4 +1,4 @@
-// examples/concept_checks.cpp -*-C++-*-
+// examples/concept_checks.cpp                                        -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <optional>

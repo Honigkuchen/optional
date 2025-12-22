@@ -1,8 +1,6 @@
 # examples/CMakeLists.txt                                           -*-cmake-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-set(BEMAN_OPTIONAL_LIBRARY "beman.optional")
-
 include(GNUInstallDirs)
 
 # List of all buildable examples.
@@ -24,12 +22,13 @@ foreach(example ${EXAMPLES})
     target_sources(${example} PRIVATE ${example}.cpp)
 
     # Link example with the library.
-    target_link_libraries(${example} "${BEMAN_OPTIONAL_LIBRARY}")
+    target_link_libraries(${example} PRIVATE beman.optional)
 
     # Install .
     install(
         TARGETS ${example}
         COMPONENT beman.optional_examples
         DESTINATION ${CMAKE_INSTALL_BINDIR}
+        EXCLUDE_FROM_ALL
     )
 endforeach()

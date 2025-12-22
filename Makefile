@@ -1,5 +1,5 @@
 #! /usr/bin/make -f
-# /Makefile -*-makefile-*-
+# Makefile                                                       -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 INSTALL_PREFIX?=.install/

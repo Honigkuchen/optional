@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.27)
 
-project(beman.optional VERSION 0.0.0 LANGUAGES CXX)
+project(beman.optional VERSION 1.0.0 LANGUAGES CXX)
 
 # Includes
 include(CTest)

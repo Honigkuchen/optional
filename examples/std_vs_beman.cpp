@@ -1,4 +1,4 @@
-// examples/std_vs_beman.cpp -*-C++-*-
+// examples/std_vs_beman.cpp                                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <optional>

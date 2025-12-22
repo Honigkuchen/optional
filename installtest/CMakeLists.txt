@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 3.30)
-project(ConsumerBemanOptional)
+# installtest/CMakeLists.txt                                        -*-CMake-*-
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-set(CMAKE_CXX_STANDARD 20)
+cmake_minimum_required(VERSION 3.27)
+project(TestInstalledOptional)
+
+set(CMAKE_CXX_STANDARD 20) #current minimum C++ version
 
 # Enable testing in this separate project
 enable_testing()
@@ -15,7 +18,7 @@ find_package(
     NO_DEFAULT_PATH
 )
 
-# Add your test executable
+# Add the test executable
 add_executable(TestInstalledOptional test.cpp)
 
 # Link against the imported target

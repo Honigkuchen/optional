@@ -9,6 +9,9 @@ on:
 
 jobs:
   auto-update-pre-commit:
+    permissions:
+      contents: write
+      pull-requests: write
     uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-update-pre-commit.yml@1.1.0
     secrets:
       APP_ID: ${{ secrets.AUTO_PR_BOT_APP_ID }}
