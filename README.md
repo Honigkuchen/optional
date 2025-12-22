@@ -331,3 +331,5 @@ Latest revision(s) of the papers can be built / found at:
   * LEWG:
     * Reviewed in Tokyo 2024.
     * Forwarded by LEWG in 2025 in Hagenberg.
+  * LWG:
+    * Reviewed and approved in Hagenberg 2025.
