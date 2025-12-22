@@ -13,4 +13,4 @@ on:
 
 jobs:
   pre-commit:
-    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-pre-commit.yml@1.1.0
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-pre-commit.yml@13d8237273e7f4cd4a739f1ceb6539f5aec3f50d # 1.1.0
