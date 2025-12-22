@@ -2,6 +2,9 @@
 
 name: Continuous Integration Tests
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -127,4 +130,7 @@ jobs:
   create-issue-when-fault:
     needs: [preset-test, build-and-test]
     if: failure() && github.event_name == 'schedule'
+    permissions:
+      contents: read
+      issues: write
     uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-create-issue-when-fault.yml@1.1.0

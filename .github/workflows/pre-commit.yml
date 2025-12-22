@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
