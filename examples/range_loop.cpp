@@ -1,4 +1,4 @@
-// examples/range_loop.cpp -*-C++-*-
+// examples/range_loop.cpp                                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/optional/optional.hpp>

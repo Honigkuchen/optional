@@ -1,4 +1,4 @@
-// examples/optional_ref.cpp -*-C++-*-
+// examples/base_derived_cast.cpp                                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/optional/optional.hpp>

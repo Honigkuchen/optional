@@ -73,7 +73,7 @@ Full code can be found in [./examples/optional_ref.cpp](./examples/optional_ref.
 
 ## License
 
-Source is licensed with the Apache 2.0 license with LLVM exceptions
+`beman.optional` is licensed under the Apache License v2.0 with LLVM Exceptions.
 
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
@@ -96,8 +96,6 @@ This is a modern C++ project which can be compiled with the latest C++ standards
 Default build: `C++23`. Please check `etc/${compiler}-flags.cmake`.
 
 ### Dependencies
-
-This project is mainly tested on `Ubuntu 22.04` and `Ubuntu 24.04`, but it should be as portable as CMake is. This project has no C or C++ dependencies.
 
 Build-time dependencies:
 
@@ -133,54 +131,67 @@ The precise version of GoogleTest that will be used is maintained in
 
 </details>
 
+### Supported Platforms
+
+This project officially supports:
+
+* GCC versions 12–15
+* LLVM Clang++ (with libstdc++ or libc++) versions 18–21
+* AppleClang version 17.0.0 (i.e., the [latest version on GitHub-hosted macOS runners](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md))
+* MSVC version 19.44.35215.0 (i.e., the [latest version on GitHub-hosted Windows runners](https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md))
+
+> [!NOTE]
+>
+> Versions above these ranges would likely work as well,
+> (e.g. HEAD/ nightly).
+> These development environments are verified using our CI configuration in [.github/workflows/ci_tests.yml](.github/workflows/ci_tests.yml).
+
 ### Instructions
 
-Full set of supported toolchains can be found in [.github/workflows/ci.yml](.github/workflows/ci.yml).
+#### Develop using GitHub Codespace
+
+This project supports [GitHub Codespace](https://github.com/features/codespaces)
+via [Development Containers](https://containers.dev/),
+which allows rapid development and instant hacking in your browser.
+We recommend using GitHub codespace to explore this project as it
+requires minimal setup.
+
+Click the following badge to create a codespace:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/bemanproject/optional)
+
+For more documentation on GitHub codespaces, please see
+[this doc](https://docs.github.com/en/codespaces/).
+
+> [!NOTE]
+>
+> The codespace container may take up to 5 minutes to build and spin-up; this is normal.
 
 #### Preset CMake Flows
 
-This project strives to be as normal and simple a CMake project as possible. This build workflow in particular will work, producing a static `beman.optional` library, ready to package:
+This project recommends using [CMake Presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html)
+to configure, build and test the project.
+Appropriate presets for major compilers have been included by default.
+You can use `cmake --list-presets` to see all available presets.
+
+Here is an example to invoke the `gcc-debug` preset.
 
 ```shell
-# List available preset configurations:
-$ cmake --workflow --list-presets
-Available workflow presets:
-
-  "system"
-  "gcc-14"
-  "gcc-13"
-  "clang-18"
-  "clang-17"
-
-# Run examples:
-$ cmake --workflow --preset gcc-14
-cmake --workflow --preset gcc-14
-Executing workflow step 1 of 3: configure preset "gcc-14"
-...
--- Build files have been written to: /path/to/repo/.build/gcc-14
-
-Executing workflow step 2 of 3: build preset "gcc-14"
-
-ninja: no work to do.
-
-Executing workflow step 3 of 3: test preset "gcc-14"
-
-Test project /path/to/repo/.build/gcc-14
-        Start   1: OptionalTest.TestGTest
-  1/... Test   #1: OptionalTest.TestGTest ...........................   Passed    0.00 sec
-...
-        Start   x: RangeSupportTest.RangeConcepts
-.../... Test   #x: RangeSupportTest.RangeConcepts ...................   Passed    0.00 sec
-        Start x+1: RangeSupportTest.IteratorConcepts
-.../... Test #x+1: RangeSupportTest.IteratorConcepts ................   Passed    0.00 sec
-...
-
-100% tests passed, 0 tests failed out of ...
-
-Total Test time (real) =   0.09 sec
+cmake --workflow --preset gcc-debug
 ```
 
-This should build and run the tests with GCC 14 with the address and undefined behavior sanitizers enabled.
+Generally, there are two kinds of presets, `debug` and `release`.
+
+The `debug` presets are designed to aid development, so it has debugging
+instrumentation enabled and many sanitizers enabled.
+
+> [!NOTE]
+>
+> The sanitizers that are enabled vary from compiler to compiler.
+> See the toolchain files under ([`cmake`](cmake/)) to determine the exact configuration used for each preset.
+
+The `release` presets are designed for production use, and
+consequently have the highest optimization turned on (e.g. `O3`).
 
 #### Custom CMake Flows
 
@@ -271,6 +282,36 @@ There is also a Makefile that will automate this process and keep everything up 
 
 ```shell
 make lint
+```
+
+#### Install beman.optional
+
+
+```bash
+cmake --workflow --preset gcc-release
+cmake --install build/gcc-release --prefix /opt/beman
+```
+
+This will generate the following directory structure at `/opt/beman`.
+
+```txt
+/opt/beman
+├── include
+│   └── beman
+│       └── optional
+│           ├── detail
+│           │   ├── iterator.hpp
+│           │   └── stl_interfaces
+│           │       ├── config.hpp
+│           │       ├── fwd.hpp
+│           │       └── iterator_interface.hpp
+│           └── optional.hpp
+└── lib
+    └── cmake
+        └── beman.optional
+            ├── beman.optional-config.cmake
+            ├── beman.optional-config-version.cmake
+            └── beman.optional-targets.cmake
 ```
 
 ## Papers

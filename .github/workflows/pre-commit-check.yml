@@ -1,6 +1,7 @@
 name: Lint Check (pre-commit)
 
 on:
+  workflow_dispatch:
   # We have to use pull_request_target here as pull_request does not grant
   # enough permission for reviewdog
   pull_request_target:
