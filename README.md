@@ -15,10 +15,6 @@ This repository implements `std::optional` extensions targeting C++26. The `bema
 
 **Status**: [Production ready. API may undergo changes.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#production-ready-api-may-undergo-changes)
 
-## License
-
-`beman.exemplar` is licensed under the Apache License v2.0 with LLVM Exceptions.
-
 ## Examples
 
 Full runable examples can be found in `examples/` - please check [./examples/README.md](./examples/README.md).
