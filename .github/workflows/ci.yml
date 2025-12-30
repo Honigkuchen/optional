@@ -8,8 +8,9 @@ on:
     # minute hour day month day-of-week
     # Run at 12:25 UTC every day
     - cron: '25 12 * * *'
-  permissions:
-    contents: read
+
+permissions:
+  contents: read
 
 jobs:
   build:
