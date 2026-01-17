@@ -24,16 +24,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        cppstd: [20, 23, 26]
         config:
-          - {name: "Ubuntu Clang 21", tag: "clang:21", toolchain: "clang-21", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" 	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
-          - {name: "Ubuntu Clang 20", tag: "clang:20", toolchain: "clang-20", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
+          - {name: "Ubuntu Clang 21", tag: "clang:21", toolchain: "clang-21", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
+          - {name: "Ubuntu Clang 20", tag: "clang:20", toolchain: "clang-20", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
           # Note: clang-19 + Asan setup causes errors on some platforms. Temporary skip some checks via .asan_options.
-          - {name: "Ubuntu Clang 19", tag: "clang:19", toolchain: "clang-19", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" ", asan_options: "new_delete_type_mismatch=0"}
-          - {name: "Ubuntu Clang 18", tag: "clang:18", toolchain: "clang-18", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
-          - {name: "Ubuntu Clang 17", tag: "clang:17", toolchain: "clang-17", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
-          - {name: "Ubuntu GCC 14", tag: "gcc:14", toolchain: "gcc-14", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan;Gcov\" 	-DCMAKE_PREFIX_PATH=\"./infra/cmake\"  ", coverage: true}
-          - {name: "Ubuntu GCC 13", tag: "gcc:13", toolchain: "gcc-13",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
-          - {name: "Ubuntu GCC 12", tag: "gcc:12", toolchain: "gcc-12",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\"  	-DCMAKE_PREFIX_PATH=\"./infra/cmake\" "}
+          - {name: "Ubuntu Clang 19", tag: "clang:19", toolchain: "clang-19", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\"", asan_options: "new_delete_type_mismatch=0"}
+          - {name: "Ubuntu Clang 18", tag: "clang:18", toolchain: "clang-18", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
+          - {name: "Ubuntu Clang 17", tag: "clang:17", toolchain: "clang-17", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
+          - {name: "Ubuntu GCC 14", tag: "gcc:14", toolchain: "gcc-14", cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan;Gcov\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\"", coverage: true}
+          - {name: "Ubuntu GCC 13", tag: "gcc:13", toolchain: "gcc-13",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
+          - {name: "Ubuntu GCC 12", tag: "gcc:12", toolchain: "gcc-12",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
+        exclude:
+          # Exclude combinations that are not supported
+          - config: {name: "Ubuntu GCC 13", tag: "gcc:13", toolchain: "gcc-13",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
+            cppstd: 26
+          - config: {name: "Ubuntu GCC 12", tag: "gcc:12", toolchain: "gcc-12",  cmake_args: "-G \"Ninja Multi-Config\" -DCMAKE_CONFIGURATION_TYPES=\"RelWithDebInfo;Asan\" -DCMAKE_PREFIX_PATH=\"./infra/cmake\""}
+            cppstd: 26
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
@@ -68,6 +75,7 @@ jobs:
           rm -rf .build
           cmake ${{ matrix.config.cmake_args }} \
             -DCMAKE_INSTALL_PREFIX=.install \
+            -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} \
             -DCMAKE_TOOLCHAIN_FILE="etc/${{ matrix.config.toolchain }}-toolchain.cmake" \
             -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="./cmake/use-fetch-content.cmake" \
             -B .build \

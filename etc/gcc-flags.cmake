@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=gnu++20" CACHE STRING "CXX_FLAGS" FORCE)
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=gnu++${CMAKE_CXX_STANDARD}" CACHE STRING "CXX_FLAGS" FORCE)
 
 set(CMAKE_CXX_FLAGS_DEBUG
     "-O0 -fno-inline -g3"
